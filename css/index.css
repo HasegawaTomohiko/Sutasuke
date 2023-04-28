@@ -1,0 +1,79 @@
+@charset 'utf-8';
+
+div#header{
+  display: flex;
+  background-color: red;
+  position: fixed;
+  width:100vw;
+  height:50px;
+}
+  div#header div#headerIcon{
+    position:relative;
+    text-align: left;
+    align-self: flex-start;
+    width:70px;
+    height:40px;
+    top:5px;
+    left:20px;
+    background-color: green;
+  }
+  div#header div#headerUser{
+    position: absolute;
+    align-self: flex-end;
+    background-color: green;
+    width:40px;
+    height:40px;
+    top:5px;
+    right:20px;
+  }
+    div#header div#headerUser div#userNav{
+      position:relative;
+      width:100px;
+      height:130px;
+      background-color: aqua;
+      top: 20px;
+      right: 60px;
+    }
+
+div#content{
+  position:absolute;
+  display: flex;
+  width:100vw;
+  height:92.5vh;
+  top:50px;
+  overflow: hidden;
+}
+
+div#content div#mapNav{
+  width:20vw;
+  height:100vh;
+  background-color: aqua;
+}
+div#content div#mapNav div#mapCreate{
+  margin:10px 0px 10px 0px;
+  text-align: center;
+}
+
+div#content div#mapContent{
+  width:80vw;
+  height:100vh;
+}
+
+div#content div#mapContent div#mapView{
+  height:65vh;
+}
+div#content div#mapContent div#mapView div#mapContentView{
+  overflow:auto;
+  height:65vh;
+}
+div#content div#mapContent div#mapQuestNav{
+  width:100vw;
+  height:35vh;
+}
+
+div#content div#mapContent div#mapQuestNav div#mapQuestAdd{
+  position:absolute;
+  bottom:10px;
+  left: 50%;
+  transform: translate(50%);
+}
