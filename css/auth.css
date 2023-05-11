@@ -1,0 +1,29 @@
+@charset 'utf-8';
+
+.tabbox{
+  width:80vw;
+  display:flex;
+  border:2px solid;
+  cursor:pointer;
+}
+
+.tab{
+  width:50vw;
+  padding:5px;
+  text-align: center;
+  list-style: none;
+}
+
+.tab.active{
+  background-color:red;
+  color: blue;
+}
+
+.panel {
+  display:none;
+  text-align: center;
+}
+
+.panel.active{
+  display: block;
+}

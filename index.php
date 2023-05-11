@@ -36,6 +36,7 @@
             <div id="mapCreate">
                 <button>新規作成</button>
             </div>
+            <!-- ここにphpで取得したマップデータを表示する、クリックされたものをmapCanvasに出力する -->
         </div>
         <div id="mapContent">
             <div id="mapView">
@@ -55,6 +56,7 @@
             </div>
             <!-- クエスト表示ナビゲーション -->
             <div id="mapQuestNav">
+                <!-- ここにphpで取得したクエストを追加する -->
                 <div id="mapQuestAdd">
                     <button>クエスト作成</button>
                 </div>
