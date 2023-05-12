@@ -21,7 +21,6 @@
             <input type="text" name="userID" id="userID" placeholder="userID"><br>
             <input type="password" name="password" id="password" placeholder="password"><br>
             <input type="submit" value="ログイン">
-
         </form>
         </div>
         <div class="panel">
