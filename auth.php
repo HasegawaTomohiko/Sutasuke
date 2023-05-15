@@ -5,8 +5,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="./css/res
-    .css">
+    <link rel="stylesheet" href="./css/res.css">
     <link rel="stylesheet" href="./css/auth.css">
     <title>Sutasuke/auth</title>
 </head>
@@ -17,18 +16,18 @@
     </ul>
     <div class="formbox">
         <div class="panel active">
-        <form action="./index.php" method="post">
+        <form action="./login.php" method="post">
             <input type="text" name="userID" id="userID" placeholder="userID"><br>
             <input type="password" name="password" id="password" placeholder="password"><br>
             <input type="submit" value="ログイン">
         </form>
         </div>
         <div class="panel">
-            <form action="./index.php" method="post">
+            <form action="./register.php" method="post">
                 <input type="text" name="userID" id="userID" placeholder="userID"><br>
                 <input type="text" name="userName" id="userName" placeholder="user name"><br>
                 <input type="email" name="userMail" id="userMail" placeholder="E-Mail address"><br>
-                <input type="password" name="password" id="password" placeholder="password"><br>
+                <input type="password" name="pass" id="pass" placeholder="password"><br>
                 <input type="submit" value="新規登録" >
             </form>
         </div>
