@@ -18,7 +18,6 @@
                 <div class="panel active">
                 <label>ログイン</label>
                 <form action="./login.php" method="post">
-                    <!-- <label id="userID">ユーザーID</label><br> -->
                     <input type="text" name="userID" id="userID" placeholder="userID" required="required"><br>
                     <input type="password" name="password" id="password" placeholder="password" required="required"><br>
                     <input type="submit" name="button" value="ログイン">
