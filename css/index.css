@@ -37,6 +37,7 @@ div#header{
       text-decoration: dashed;
       margin-top: 10px;
       border-radius: 10px;
+      /* ボタンが押されると表示する */
       display: none;
     }
 
