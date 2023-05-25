@@ -10,6 +10,7 @@ let changeElement = (el)=> {
 }
 
 
+
 switchBtn.addEventListener('click', ()=> {
   changeElement(nav);
 }, false);
