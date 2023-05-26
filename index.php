@@ -21,7 +21,9 @@
             <img src="" alt="siteIcon">
         </div>
         <div id="headerUser">
-            <img src="" alt="userIcon">
+            <div id="userIcon">
+                <img src="001.png" alt="userIcon">
+            </div>
             <!-- ユーザアイコンをクリックしたときのナビゲーション -->
             <div id="userNav">
                 <div id="userSetting">ユーザ設定</div>
@@ -71,6 +73,7 @@
     <script src="https://code.jquery.com/jquery-3.6.4.js" integrity="sha256-a9jBBRygX1Bh5lt8GZjXDzyOB+bWve9EiO7tROUtj/E=" crossorigin="anonymous"></script>
     <!-- <script src="./js/tile.js"></script> -->
     <!-- <script src="./js/index.js"></script> -->
-    <script src="./js/test.js"></script>
+    <script src="./js/index.js"></script>
+    <script src="./js/tab.js"></script>
 </body>
 </html>

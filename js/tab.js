@@ -1,5 +1,5 @@
 //iconをクリックしたらusernavの表示/非表示
-let switchBtn = document.getElementsByTagName('button')[0];
+let switchBtn = document.getElementById('userIcon');
 let nav = document.getElementById('userNav');
 let changeElement = (el)=> {
   if(el.style.display=='none'){
@@ -8,8 +8,6 @@ let changeElement = (el)=> {
     el.style.display='none';
   }
 }
-
-
 
 switchBtn.addEventListener('click', ()=> {
   changeElement(nav);
