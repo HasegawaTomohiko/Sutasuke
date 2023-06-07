@@ -1,4 +1,3 @@
-
 let canvas = document.getElementById('mapCanvas');
 let tileLayer = document.createElement('canvas');
 let lineLayer = document.createElement('canvas');
@@ -12,11 +11,6 @@ class Tile {
   }
 
   draw() {
-      // tileContext.beginPath();
-      // tileContext.arc(this.x, this.y, 20, 0, Math.PI * 2);
-      // tileContext.fillStyle = this.color;
-      // tileContext.fill();
-      // tileContext.closePath();
       tileLayer.getContext('2d').beginPath();
       tileLayer.getContext('2d').arc(this.x, this.y, 20, 0, Math.PI * 2);
       tileLayer.getContext('2d').fillStyle = this.color;
@@ -26,6 +20,9 @@ class Tile {
 
   connectTo(nextTile) {
       this.nextTiles.push(nextTile);
+  }
+  backconnectTo(backTile){
+      this.backTile.push(backTile);
   }
 
   drawConnections() {
@@ -53,12 +50,12 @@ class Tile {
       this.isDragging = false;
   }
   drag(mouseX, mouseY) {
-      if (this.isDragging) {
-        this.x += mouseX - this.dragStartX;
-        this.y += mouseY - this.dragStartY;
-        this.dragStartX = mouseX;
-        this.dragStartY = mouseY;
-      }
+    if (this.isDragging) {
+      this.x += mouseX - this.dragStartX;
+      this.y += mouseY - this.dragStartY;
+      this.dragStartX = mouseX;
+      this.dragStartY = mouseY;
+    }
   }
 }
 
@@ -91,6 +88,8 @@ lineLayer.width = canvas.width;
 lineLayer.height = canvas.height;
 //let lineContext = lineLayer.getContext('2d');
 
+//getMapDataでクリックした時のMapIDを元にMapDataを取得する
+//追加予定 : backTilesを追加して後ろのTileを参照できるようにする
 let mapData = {
   "tiles": [
       {"x": 30, "y": 30, "color": "red", "nextTiles": [1,5]},
@@ -104,6 +103,7 @@ let mapData = {
   ]
 };
 
+//マップ切り替え時に行う(if 新規作成click - );
 let mapTiles = generateMap(mapData);
 
 for (let i = 0; i < mapTiles.length; i++) {
