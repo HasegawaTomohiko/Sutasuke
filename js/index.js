@@ -1,3 +1,10 @@
+<<<<<<< HEAD
+=======
+let canvas = document.getElementById('mapCanvas');
+let tileLayer = document.createElement('canvas');
+let lineLayer = document.createElement('canvas');
+
+>>>>>>> 12f04d19b4f82fbe0a0a8f57246388b33096269c
 class Tile {
   constructor(x, y, color) {
       this.x = x;
@@ -7,26 +14,29 @@ class Tile {
   }
 
   draw() {
-      tileContext.beginPath();
-      tileContext.arc(this.x, this.y, 20, 0, Math.PI * 2);
-      tileContext.fillStyle = this.color;
-      tileContext.fill();
-      tileContext.closePath();
+      tileLayer.getContext('2d').beginPath();
+      tileLayer.getContext('2d').arc(this.x, this.y, 20, 0, Math.PI * 2);
+      tileLayer.getContext('2d').fillStyle = this.color;
+      tileLayer.getContext('2d').fill();
+      tileLayer.getContext('2d').closePath();
   }
 
   connectTo(nextTile) {
       this.nextTiles.push(nextTile);
   }
+  backconnectTo(backTile){
+      this.backTile.push(backTile);
+  }
 
   drawConnections() {
       for (let i = 0; i < this.nextTiles.length; i++) {
-          lineContext.save();
-          lineContext.beginPath();
-          lineContext.moveTo(this.x, this.y);
-          lineContext.lineTo(this.nextTiles[i].x, this.nextTiles[i].y);
-          lineContext.strokeStyle = 'black';
-          lineContext.stroke();
-          lineContext.closePath();
+          lineLayer.getContext('2d').save();
+          lineLayer.getContext('2d').beginPath();
+          lineLayer.getContext('2d').moveTo(this.x, this.y);
+          lineLayer.getContext('2d').lineTo(this.nextTiles[i].x, this.nextTiles[i].y);
+          lineLayer.getContext('2d').strokeStyle = 'black';
+          lineLayer.getContext('2d').stroke();
+          lineLayer.getContext('2d').closePath();
       }
   }
 
@@ -43,12 +53,12 @@ class Tile {
       this.isDragging = false;
   }
   drag(mouseX, mouseY) {
-      if (this.isDragging) {
-        this.x += mouseX - this.dragStartX;
-        this.y += mouseY - this.dragStartY;
-        this.dragStartX = mouseX;
-        this.dragStartY = mouseY;
-      }
+    if (this.isDragging) {
+      this.x += mouseX - this.dragStartX;
+      this.y += mouseY - this.dragStartY;
+      this.dragStartX = mouseX;
+      this.dragStartY = mouseY;
+    }
   }
 }
 
@@ -73,19 +83,16 @@ function generateMap(mapData) {
   return mapTiles;
 }
 
-let canvas = document.getElementById('mapCanvas');
-let tileLayer = document.createElement('canvas');
-let lineLayer = document.createElement('canvas');
-let context = canvas.getContext('2d');
-
 tileLayer.width = canvas.width;
 tileLayer.height = canvas.height;
-let tileContext = tileLayer.getContext('2d');
+//let tileContext = tileLayer.getContext('2d');
 
 lineLayer.width = canvas.width;
 lineLayer.height = canvas.height;
-let lineContext = lineLayer.getContext('2d');
+//let lineContext = lineLayer.getContext('2d');
 
+//getMapDataでクリックした時のMapIDを元にMapDataを取得する
+//追加予定 : backTilesを追加して後ろのTileを参照できるようにする
 let mapData = {
   "tiles": [
       {"x": 30, "y": 30, "color": "red", "nextTiles": [1,5]},
@@ -99,80 +106,18 @@ let mapData = {
   ]
 };
 
-const test = {
-    "mapCompleted":false,
-    "tiles": [
-      {
-        "tileId": 1,
-        "tileTitle": "Tile1",
-        "tileContext": "This is Tile1",
-        "tileColor": "red",
-        "x": 40,
-        "y": 60,
-        "nextTiles": [2,3],
-        "backTiles": [],
-        "quests": [
-          {
-            "questTitle": "Quest1",
-            "questContext": "This is Quest1",
-            "questTargetDate": "2023-08-10",
-            "questCompletedDate": "",
-            "questCompleted": false
-          }
-        ]
-      },
-      {
-        "tileId": 2,
-        "tileTitle": "Tile2",
-        "tileContext": "This is Tile2",
-        "tileColor": "blue",
-        "tileX": 150,
-        "tileY": 80,
-        "nextTiles": [3],
-        "backTiles": [1],
-        "quests": [
-          {
-            "questTitle": "Quest2",
-            "questContext": "This is Quest2",
-            "questTargetDate": "2023-08-20",
-            "questCompletedDate": "",
-            "questCompleted": false
-          }
-        ]
-      },
-      {
-        "tileId": 3,
-        "tileTitle": "Tile3",
-        "tileContext": "This is Tile3",
-        "tileColor": "green",
-        "tileX": 260,
-        "tileY": 120,
-        "nextTiles": [],
-        "backTiles": [1,2],
-        "quests": [
-          {
-            "questTitle": "Quest3",
-            "questContext": "This is Quest3",
-            "questTargetDate": "2023-08-30",
-            "questCompletedDate": "",
-            "questCompleted": false
-          }
-        ]
-      }
-    ]
-  };
-  
-
+//マップ切り替え時に行う(if 新規作成click - );
 let mapTiles = generateMap(mapData);
 
 for (let i = 0; i < mapTiles.length; i++) {
-  mapTiles[i].draw(tileContext);
-  mapTiles[i].drawConnections(lineContext);
+  mapTiles[i].draw();
+  mapTiles[i].drawConnections();
 }
 
 canvas.getContext('2d').drawImage(lineLayer, 0 , 0);
 canvas.getContext('2d').drawImage(tileLayer, 0 , 0);
 
+<<<<<<< HEAD
 
 // 編集ボタンのコード
 function toggleButtons() {
@@ -191,3 +136,65 @@ function toggleButtons() {
   }
 }
 
+=======
+//追加
+canvas.addEventListener('mousedown', handleMouseDown);
+canvas.addEventListener('mouseup', handleMouseUp);
+canvas.addEventListener('mousemove', handleMouseMove);
+
+let selectedTile = null;
+
+function handleMouseDown(event) {
+  const mouseX = event.offsetX;
+  const mouseY = event.offsetY;
+
+  for (let i = 0; i < mapTiles.length; i++) {
+    const tile = mapTiles[i];
+    if (
+      mouseX >= tile.x - 40 &&
+      mouseX <= tile.x + 40 &&
+      mouseY >= tile.y - 40 &&
+      mouseY <= tile.y + 40
+    ) {
+      tile.isMouseOver(mouseX, mouseY);
+      selectedTile = tile;
+      break;
+    }
+  }
+
+  redrawMap();
+}
+
+function handleMouseUp(event) {
+  if (selectedTile) {
+    selectedTile.stopDragging();
+    selectedTile = null;
+    redrawMap();
+  }
+}
+
+function handleMouseMove(event) {
+  if (selectedTile) {
+    const mouseX = event.offsetX;
+    const mouseY = event.offsetY;
+    selectedTile.drag(mouseX, mouseY);
+    redrawMap();
+  }
+}
+
+function redrawMap() {
+  tileLayer.getContext('2d').clearRect(0, 0, canvas.width, canvas.height);
+  lineLayer.getContext('2d').clearRect(0, 0, canvas.width, canvas.height);
+  canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height);
+
+  for (let i = 0; i < mapTiles.length; i++) {
+    mapTiles[i].draw();
+    mapTiles[i].drawConnections();
+  }
+
+  canvas.getContext('2d').drawImage(lineLayer, 0, 0);
+  canvas.getContext('2d').drawImage(tileLayer, 0, 0);
+}
+
+redrawMap();
+>>>>>>> 12f04d19b4f82fbe0a0a8f57246388b33096269c

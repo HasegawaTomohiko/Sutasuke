@@ -33,7 +33,21 @@ div#header{
       background-color: aqua;
       top: 20px;
       right: 60px;
+      text-align: center;
+      text-decoration: dashed;
+      margin-top: 10px;
+      border-radius: 10px;
+      /* ボタンが押されると表示する */
+      display: none;
     }
+
+#BtnNav{
+  background-color: transparent;
+  border: none;
+  color: inherit;
+  cursor: pointer;
+  outline: none;
+}
 
 div#content{
   position:absolute;
