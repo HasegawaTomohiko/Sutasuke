@@ -1,4 +1,3 @@
-
 class Tile {
   constructor(x, y, color) {
       this.x = x;
@@ -173,3 +172,22 @@ for (let i = 0; i < mapTiles.length; i++) {
 
 canvas.getContext('2d').drawImage(lineLayer, 0 , 0);
 canvas.getContext('2d').drawImage(tileLayer, 0 , 0);
+
+
+// 編集ボタンのコード
+function toggleButtons() {
+  var button1 = document.getElementById("tileMove");
+  var button2 = document.getElementById("tileAdd");
+  var button3 = document.getElementById("tileEdit");
+
+  if (button1.style.display === "none") {
+      button1.style.display = "inline-block";
+      button2.style.display = "inline-block";
+      button3.style.display = "inline-block";
+  } else {
+      button1.style.display = "none";
+      button2.style.display = "none";
+      button3.style.display = "none";
+  }
+}
+
