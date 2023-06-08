@@ -1,10 +1,8 @@
-<<<<<<< HEAD
-=======
+
 let canvas = document.getElementById('mapCanvas');
 let tileLayer = document.createElement('canvas');
 let lineLayer = document.createElement('canvas');
 
->>>>>>> 12f04d19b4f82fbe0a0a8f57246388b33096269c
 class Tile {
   constructor(x, y, color) {
       this.x = x;
@@ -117,7 +115,7 @@ for (let i = 0; i < mapTiles.length; i++) {
 canvas.getContext('2d').drawImage(lineLayer, 0 , 0);
 canvas.getContext('2d').drawImage(tileLayer, 0 , 0);
 
-<<<<<<< HEAD
+
 
 // 編集ボタンのコード
 function toggleButtons() {
@@ -136,7 +134,6 @@ function toggleButtons() {
   }
 }
 
-=======
 //追加
 canvas.addEventListener('mousedown', handleMouseDown);
 canvas.addEventListener('mouseup', handleMouseUp);
@@ -197,4 +194,3 @@ function redrawMap() {
 }
 
 redrawMap();
->>>>>>> 12f04d19b4f82fbe0a0a8f57246388b33096269c
