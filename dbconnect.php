@@ -39,12 +39,22 @@
         return $map -> fetch(PDO::FETCH_ASSOC);
     }
 
-    function createMap(){
-
+    function createMap($userID,$mapData){
+        $pdo = db_connect();
+        $createMap = $pdo -> prepare('INSERT INTO map (userID,mapData) value (:userID,:mapData)');
+        //create mapID -> uuid;
+        //create updatetime and registtime.
+        $createMap -> bindValue(':userID',$userID);
+        $createMap -> bindValue(':mapData',$mapData);
+        return $createMap -> execute();
     }
 
-    function updateMap(){
-        
+    function updateMap($mapID,$mapUpdateDate,$mapData){
+        $pdo = db_connect($mapID);
+        $updateMap = $pdo -> prepare("UPDATE map set mapUpdateDate = :mapUpdateDate, mapData = :mapData WHERE mapID = :mapID ");
+        $updateMap -> bindParam(':mapUpdateDate',$mapUpdateDate);
+        $updateMap -> bindParam(':mapData',$mapData);
+        $updateMap -> bindParam(':mapID',$mapID);
+        return $updateMap -> execute();
     }
-
 ?>
