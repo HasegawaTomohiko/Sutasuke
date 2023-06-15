@@ -173,3 +173,14 @@ for (let i = 0; i < mapTiles.length; i++) {
 
 canvas.getContext('2d').drawImage(lineLayer, 0 , 0);
 canvas.getContext('2d').drawImage(tileLayer, 0 , 0);
+
+$(document).ready(function() {
+  $('#mapCanvas').click(function(event) {
+    event.preventDefault();
+    $('#formModal').modal({
+      escapeClose: false,
+      clickClose: false,
+      showClose: false
+    });
+  });
+});

@@ -13,6 +13,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="./css/reset.css">
     <link rel="stylesheet" href="./css/index.css">
+    <!-- Remember to include jQuery :) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0/jquery.min.js"></script>
+    <!-- jQuery Modal -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.css" />
     <title>Sutasuke/Home</title>
 </head>
 <body>
@@ -64,12 +69,24 @@
         </div>
     </div>
 
+    <div id="formModal" class="modal">
+        <form action="" class="form">
+            <h2>タイル追加</h2>
+            <input type="text" placeholder="タイル名"/><br/>
+            <input type="text" placeholder="タイルメモ"/><br/>
+            <input type="submit" value="戻る" onclick="window.location.href='../'">
+            <input type="submit" value="登録" onclick="window.location.href='../'">
+        </form>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.2/jquery.modal.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.2/jquery.modal.min.css" />
+    <!-- <script src="./js/tile.js"></script> -->
+    <script src="./js/index.js"></script>
+
     <div id="footer">
 
     </div>
-
-    <script src="https://code.jquery.com/jquery-3.6.4.js" integrity="sha256-a9jBBRygX1Bh5lt8GZjXDzyOB+bWve9EiO7tROUtj/E=" crossorigin="anonymous"></script>
-    <!-- <script src="./js/tile.js"></script> -->
-    <script src="./js/index.js"></script>
 </body>
 </html>
