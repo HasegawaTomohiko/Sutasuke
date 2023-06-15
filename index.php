@@ -21,7 +21,9 @@
             <img src="" alt="siteIcon">
         </div>
         <div id="headerUser">
-            <img src="" alt="userIcon">
+            <div id="userIcon">
+                <img src="001.png" alt="userIcon">
+            </div>
             <!-- ユーザアイコンをクリックしたときのナビゲーション -->
             <div id="userNav">
                 <div id="userSetting">ユーザ設定</div>
@@ -36,6 +38,7 @@
             <div id="mapCreate">
                 <button>新規作成</button>
             </div>
+            <!-- ここにphpで取得したマップデータを表示する、クリックされたものをmapCanvasに出力する -->
         </div>
         <div id="mapContent">
             <div id="mapView">
@@ -55,6 +58,7 @@
             </div>
             <!-- クエスト表示ナビゲーション -->
             <div id="mapQuestNav">
+                <!-- ここにphpで取得したクエストを追加する -->
                 <div id="mapQuestAdd">
                     <button>クエスト作成</button>
                 </div>
@@ -68,6 +72,8 @@
 
     <script src="https://code.jquery.com/jquery-3.6.4.js" integrity="sha256-a9jBBRygX1Bh5lt8GZjXDzyOB+bWve9EiO7tROUtj/E=" crossorigin="anonymous"></script>
     <!-- <script src="./js/tile.js"></script> -->
+    <!-- <script src="./js/index.js"></script> -->
     <script src="./js/index.js"></script>
+    <script src="./js/tab.js"></script>
 </body>
 </html>
