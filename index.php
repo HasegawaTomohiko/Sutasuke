@@ -23,14 +23,23 @@
 <body>
     <div id="header">
         <div id="headerIcon">
-            <img src="" alt="siteIcon">
+            <img  class="headerimg" src="img/icon/headericon.png" alt="siteIcon">
         </div>
         <div id="headerUser">
-            <img src="" alt="userIcon">
+            <div id="userIcon">
+                <img src="001.png" alt="userIcon">
+            </div>
             <!-- ユーザアイコンをクリックしたときのナビゲーション -->
             <div id="userNav">
                 <div id="userSetting">ユーザ設定</div>
-                <div id="logout">ログアウト</div>
+                <div id="user-icon" class="icon"></div>
+
+                <ul id="color-list">
+                <li class="color-option" data-color="red" style="background-color: red;"></li>
+                <li class="color-option" data-color="blue" style="background-color: blue;"></li>
+                <li class="color-option" data-color="green" style="background-color: green;"></li>
+                </ul>
+                <div id="logout"><a href="#">logout</a></div>
             </div>
         </div>
     </div>
@@ -45,6 +54,13 @@
         </div>
         <div id="mapContent">
             <div id="mapView">
+            <!-- 編集ボタン -->
+            <div id="EditButton">
+                <button onclick="toggleButtons()"><img  id="editimg" src="img/site/btnedit.png"></button>
+                <button id="tileMove" style="display: none;"><img id="editimg" src="img/site/tilelink.png"></button>
+                <button id="tileAdd" style="display: none;"><img id="editimg" src="img/site/tileadd.png"></button>
+                <button id="tileEdit" style="display: none;"><img id="editimg" src="img/site/tilemove.png"></button>
+            </div>
                 <!-- マップ編集ツール -->
                 <div id="mapEdit">
                     <div id="mapEditMode"></div>
@@ -88,5 +104,12 @@
     <div id="footer">
 
     </div>
+
+
+    <script src="https://code.jquery.com/jquery-3.6.4.js" integrity="sha256-a9jBBRygX1Bh5lt8GZjXDzyOB+bWve9EiO7tROUtj/E=" crossorigin="anonymous"></script>
+    <!-- <script src="./js/tile.js"></script> -->
+    <!-- <script src="./js/index.js"></script> -->
+    <script src="./js/index.js"></script>
+    <script src="./js/tab.js"></script>
 </body>
 </html>
