@@ -3,12 +3,12 @@ include('./dbconnect.php');
 $userID = 1;
 $questID = 1;
 $userData = getUser($userID);
-$questData = getquest($questID);
+$questData = getQuest($questID);
 
 $tileTitle = $userData['userName'];
 
 // ユーザーデータから既存のタイル情報を取得
-$existingTiles = $questData['questTitle'];
+$existingTiles = isset($questData['questTitle']) ? $questData['questTitle'] : [];
 
 // 新しいタイルデータを作成
 $newTile = [
@@ -28,11 +28,11 @@ $newTile = [
 $updatedTiles = $existingTiles;
 $updatedTiles[] = $newTile;
 
-// 更新されたタイルデータをユーザーデータに反映
-$userData['tiles'] = $updatedTiles;
+// 更新されたタイルデータをクエストデータに反映
+$questData['questTitle'] = $updatedTiles;
 
 // JSON 形式にエンコード
-$jsonData = json_encode($userData);
+$jsonData = json_encode($questData);
 
 echo $jsonData;
 ?>
