@@ -6,13 +6,14 @@ $userData = getUser($userID);
 $questData = getQuest($questID);
 
 $tileTitle = $userData['userName'];
+$questTitle = $questData['questTitle']
 
 // ユーザーデータから既存のタイル情報を取得
 $existingTiles = isset($questData['questTitle']) ? json_decode($questData['questTitle'], true) : [];
 
 // 新しいタイルデータを作成
 $newTile = [
-  'tileTitle' => $tileTitle,
+  'tileTitle' => $questTitle,
   'tileContext' => 'なにやるか',
   'tileColor' => 'red',
   'x' => 40,
