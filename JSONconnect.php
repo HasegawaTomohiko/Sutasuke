@@ -8,7 +8,7 @@ $questData = getQuest($questID);
 $tileTitle = $userData['userName'];
 
 // ユーザーデータから既存のタイル情報を取得
-$existingTiles = isset($questData['questTitle']) ? $questData['questTitle'] : [];
+$existingTiles = isset($questData['questTitle']) ? json_decode($questData['questTitle'], true) : [];
 
 // 新しいタイルデータを作成
 $newTile = [
@@ -29,7 +29,7 @@ $updatedTiles = $existingTiles;
 $updatedTiles[] = $newTile;
 
 // 更新されたタイルデータをクエストデータに反映
-$questData['questTitle'] = $updatedTiles;
+$questData['questTitle'] = json_encode($updatedTiles);
 
 // JSON 形式にエンコード
 $jsonData = json_encode($questData);
