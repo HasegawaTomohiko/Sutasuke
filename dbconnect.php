@@ -50,7 +50,7 @@
     }
 
     function updateMap($mapID,$mapUpdateDate,$mapData){
-        $pdo = db_connect($mapID);
+        $pdo = db_connect();
         $updateMap = $pdo -> prepare("UPDATE map set mapUpdateDate = :mapUpdateDate, mapData = :mapData WHERE mapID = :mapID ");
         $updateMap -> bindParam(':mapUpdateDate',$mapUpdateDate);
         $updateMap -> bindParam(':mapData',$mapData);
