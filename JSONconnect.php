@@ -8,7 +8,7 @@ $questData = getquest($questID);
 $tileTitle = $userData['userName'];
 
 // ユーザーデータから既存のタイル情報を取得
-$existingTiles = $questData['questTile'];
+$existingTiles = $questData['questTitle'];
 
 // 新しいタイルデータを作成
 $newTile = [
