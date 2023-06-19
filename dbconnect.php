@@ -33,8 +33,8 @@
 
     function getMap($userID){
         $pdo = db_connect();
-        $map = $pdo -> prepare('SELECT * FROM map Where userID = :userID');
-        $map -> bindValue(':userID',$userID);
+        $map = $pdo -> prepare('SELECT * from map WHERE userID = :userID');
+        $map -> bindParam(':userID',$userID);
         $map -> execute();
         return $map -> fetch(PDO::FETCH_ASSOC);
     }
