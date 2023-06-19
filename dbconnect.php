@@ -57,4 +57,12 @@
         $updateMap -> bindParam(':mapID',$mapID);
         return $updateMap -> execute();
     }
+
+    function getQuest($questID){
+        $pdo = db_connect();
+        $user = $pdo -> prepare("SELECT * FROM quest Where questID = :questID");
+        $user -> bindValue(':questID', $questID);
+        $user -> execute();
+        return $user -> fetch(PDO::FETCH_ASSOC);
+    }
 ?>
