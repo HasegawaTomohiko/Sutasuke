@@ -51,6 +51,7 @@
                 <button>新規作成</button>
             </div>
             <!-- ここにphpで取得したマップデータを表示する、クリックされたものをmapCanvasに出力する -->
+            <div id="mapCol"></div>
         </div>
         <div id="mapContent">
             <div id="mapView">
