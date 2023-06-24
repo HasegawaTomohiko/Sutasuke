@@ -2,8 +2,7 @@
 
 require_once 'dbconnect.php';
 
-$mapID = $_POST['mapID'];
-$mapData = $_POST['mapData'];
+$mapTitle = $_POST['mapTitle'];
 
 if(createMap($mapID,$mapData)){
   $response = array();

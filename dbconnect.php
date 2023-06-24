@@ -31,12 +31,78 @@
         return $createUser -> execute();
     }
 
-    function getMap($userID){
+    function getMapList($userID){
         $pdo = db_connect();
-        $map = $pdo -> prepare('SELECT * from map WHERE userID = :userID');
+        $map = $pdo -> prepare('SELECT mapID, mapTitle from map WHERE userID = :userID');
         $map -> bindParam(':userID',$userID);
         $map -> execute();
         return $map -> fetch(PDO::FETCH_ASSOC);
+    }
+
+    function getMapDetails($mapID){
+        $pdo = db_connect();
+
+        $st = $pdo -> prepare('SELECT * FROM map WHRER mapID = :mapID');
+        $st -> bindParam(':mapID', $mapID, PDO::PARAM_STR);
+        $st -> execute();
+        $mapDetails = $st -> fetch(PDO::FETCH_ASSOC);
+
+        
+        $stmt = $pdo->prepare('SELECT * FROM tile WHERE mapID = :mapID');
+        $stmt->bindValue(':mapID', $mapID, PDO::PARAM_STR);
+        $stmt->execute();
+        $tiles = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        $stmt = $pdo->prepare('SELECT * FROM tileConnect WHERE tileStart IN (SELECT tileID FROM tile WHERE mapID = :mapID)');
+        $stmt->bindValue(':mapID', $mapID, PDO::PARAM_STR);
+        $stmt->execute();
+        $tileConnects = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        $stmt = $pdo->prepare('SELECT * FROM quest WHERE tileID IN (SELECT tileID FROM tile WHERE mapID = :mapID)');
+        $stmt->bindValue(':mapID', $mapID, PDO::PARAM_STR);
+        $stmt->execute();
+        $quests = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        $mapData = array(
+            'mapID' => $mapDetails['mapID'],
+            'mapTitle' => $mapDetails['mapTitle'],
+            'mapContext' => $mapDetails['mapContext'],
+            'tiles' => array()
+        );
+
+        foreach ($tiles as $tile) {
+            $tileData = array(
+                'tileID' => $tile['tileID'],
+                'tileTitle' => $tile['tileTitle'],
+                'tileContext' => $tile['tileContext'],
+                'tileX' => $tile['tileX'],
+                'tileY' => $tile['tileY'],
+                'nextTiles' => array(),
+                'backTiles' => array(),
+                'tileCompleted' => false,
+                'tileExecutable' => false,
+                'questID' => array()
+            );
+
+            foreach ($tileConnects as $tileConnect) {
+                if ($tileConnect['tileStart'] === $tile['tileID']) {
+                    $tileData['nextTiles'][] = $tileConnect['tileTo'];
+                }
+                if ($tileConnect['tileTo'] === $tile['tileID']) {
+                    $tileData['backTiles'][] = $tileConnect['tileStart'];
+                }
+            }
+
+            foreach ($quests as $quest) {
+                if ($quest['tileID'] === $tile['tileID']) {
+                    $tileData['questID'][] = $quest['questID'];
+                }
+            }
+
+            $mapData['tiles'][] = $tileData;
+        }
+
+        return $mapData;
     }
 
     function createMap($userID,$mapTitle){
