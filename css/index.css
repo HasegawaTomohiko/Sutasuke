@@ -5,7 +5,7 @@ div#header{
   background-color: rgb(147, 251, 126);
   position: fixed;
   width:100vw;
-  height:50px;
+  height:70px;
   border-bottom: 1px solid;
   border-color: gray;
 }
@@ -20,7 +20,6 @@ div#header{
     /* background-color: green; */
   }
   .headerimg {
-
     height: 55px; /* 高さ：200ピクセル */
   }
   div#header div#headerUser{
@@ -86,8 +85,8 @@ div#content{
   position:absolute;
   display: flex;
   width:100vw;
-  height:92.5vh;
-  top:50px;
+  height:90vh;
+  top:71px;
   overflow: hidden;
 }
 
