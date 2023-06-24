@@ -37,10 +37,10 @@ CREATE TABLE tileConnection (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 CREATE TABLE quest(
-  questID varchar(20),
-  tileID varchar(15),
-  questTitle varchar(50) DEFAULT NULL,
-  questContext varchar(500) DEFAULT NULL,
+  questID varchar(20), 
+  mapID varchar(15),
+  questTitle varchar(30) DEFAULT NULL,
+  questContext varchar(100) DEFAULT NULL,
   questCompleted tinyint(1) DEFAULT 0,
   questCompleteDate datetime,
   questTargetDate datetime,
@@ -49,6 +49,7 @@ CREATE TABLE quest(
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 
+<<<<<<< HEAD
 INSERT INTO quest (questID,questTitle,questContext,questTargetDate) value (
   "test1test1test1test1",
   "テスト001-因数分解",
@@ -84,5 +85,6 @@ INSERT INTO map (mapID,userID,mapTitle,mapData,mapUpdateDate,mapRegistDate) valu
   "テストマップ2",
   GETDATE(),
   GETDATE()
+
 );
 

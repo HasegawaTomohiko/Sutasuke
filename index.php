@@ -2,6 +2,11 @@
 
     // ユーザ取得プログラム(居なかったらログインと新規登録ボタンを表示させる)
     // map取得プログラム(cookieにユーザが登録されていたらそれを使ってmapテーブルを取得)、map情報をすだれ式に表示させる
+    if(!isset($_COOKIE['userID'])){
+        header('location:./auth.php');
+    }
+
+    $userID = $_COOKIE['userID'];
 
 ?>
 
@@ -33,7 +38,7 @@
             <div id="userNav">
                 <div id="userSetting">ユーザ設定</div>
                 <div id="user-icon" class="icon"></div>
-
+                <div><?= $userID ?></div>
                 <ul id="color-list">
                 <li class="color-option" data-color="red" style="background-color: red;"></li>
                 <li class="color-option" data-color="blue" style="background-color: blue;"></li>

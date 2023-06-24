@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <?php
 
   require 'dbconnect.php';
@@ -68,5 +69,6 @@
   $res = array('success' => true);
   header('Content-Type: application/json');
   echo json_encode($res);
+
 
 ?>

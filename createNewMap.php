@@ -1,3 +1,4 @@
+
 <?php
 
 require_once 'dbconnect.php';
@@ -13,5 +14,6 @@ if(createMap($mapID,$mapData)){
   $response['success'] = false;
   echo json_encode($response);
 }
+
 
 ?>

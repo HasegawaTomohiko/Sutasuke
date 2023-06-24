@@ -1,3 +1,4 @@
+
 <?php
 
   require('./dbconnect.php');
@@ -7,5 +8,6 @@
   $mapData = getMapDetails($mapID);
 
   echo json_encode($mapData);
+
 
 ?>
