@@ -16,19 +16,16 @@ switchBtn.addEventListener('click', ()=> {
 
 
 function saveIcon(icon) {
-  // Get the src of the icon.
+
   var iconSrc = icon.src;
 
-  // Set the src of the user's profile.
   var userProfile = document.getElementById('user-profile');
   userProfile.src = iconSrc;
 }
 
 function changeIcon() {
-  // Get the src of the div element.
   var divSrc = document.getElementById('userIcon').src;
 
-  // Set the src of the icon.
   var icon = document.querySelector('ul li img:checked');
   document.getElementById('userIcon').src = icon.src;
 }
