@@ -1,10 +1,9 @@
-<<<<<<< HEAD
 <?php
+// dbconnect.phpを読み込む
+require_once 'dbconnect.php';
 
-  require 'dbconnect.php';
-
-  function saveMapData($mapData){
-    
+// JSONデータをサーバー上に保存する関数
+function saveMapData($mapData) {
     $pdo = db_connect();
 
     // mapテーブルの更新
@@ -16,59 +15,66 @@
 
     // tileテーブルとtileConnectテーブルの更新
     foreach ($mapData['tiles'] as $tile) {
-      // tileテーブルの更新
-      $stmt = $pdo->prepare('UPDATE tile SET tileTitle = :tileTitle, tileContext = :tileContext, tileX = :tileX, tileY = :tileY WHERE tileID = :tileID');
-      $stmt->bindValue(':tileTitle', $tile['tileTitle'], PDO::PARAM_STR);
-      $stmt->bindValue(':tileContext', $tile['tileContext'], PDO::PARAM_STR);
-      $stmt->bindValue(':tileX', $tile['tileX'], PDO::PARAM_INT);
-      $stmt->bindValue(':tileY', $tile['tileY'], PDO::PARAM_INT);
-      $stmt->bindValue(':tileID', $tile['tileID'], PDO::PARAM_STR);
-      $stmt->execute();
-
-      // tileConnectテーブルの更新
-      // 一旦、tileStartに関連するレコードを削除
-      $stmt = $pdo->prepare('DELETE FROM tileConnect WHERE tileStart = :tileStart');
-      $stmt->bindValue(':tileStart', $tile['tileID'], PDO::PARAM_STR);
-      $stmt->execute();
-
-      // tileToに関連するレコードを挿入
-      foreach ($tile['nextTiles'] as $nextTile) {
-        $stmt = $pdo->prepare('INSERT INTO tileConnect (tileStart, tileTo) VALUES (:tileStart, :tileTo)');
-        $stmt->bindValue(':tileStart', $tile['tileID'], PDO::PARAM_STR);
-        $stmt->bindValue(':tileTo', $nextTile, PDO::PARAM_STR);
-        $stmt->execute();
-      }
-    }
-
-    // questテーブルの更新
-    // 一旦、マップに関連するクエストのレコードを削除
-    $stmt = $pdo->prepare('DELETE FROM quest WHERE tileID IN (SELECT tileID FROM tile WHERE mapID = :mapID)');
-    $stmt->bindValue(':mapID', $mapData['mapID'], PDO::PARAM_STR);
-    $stmt->execute();
-
-    // 新しいクエストのレコードを挿入
-    foreach ($mapData['tiles'] as $tile) {
-      foreach ($tile['questID'] as $questID) {
-        $stmt = $pdo->prepare('INSERT INTO quest (questID, tileID, questTitle, questContext, questCompleted, questCompleteDate, questTargetDate) VALUES (:questID, :tileID, :questTitle, :questContext, :questCompleted, :questCompleteDate, :questTargetDate)');
-        $stmt->bindValue(':questID', $questID, PDO::PARAM_STR);
+        // tileテーブルの更新
+        $stmt = $pdo->prepare('UPDATE tile SET tileTitle = :tileTitle, tileContext = :tileContext, tileX = :tileX, tileY = :tileY WHERE tileID = :tileID');
+        $stmt->bindValue(':tileTitle', $tile['tileTitle'], PDO::PARAM_STR);
+        $stmt->bindValue(':tileContext', $tile['tileContext'], PDO::PARAM_STR);
+        $stmt->bindValue(':tileX', $tile['tileX'], PDO::PARAM_INT);
+        $stmt->bindValue(':tileY', $tile['tileY'], PDO::PARAM_INT);
         $stmt->bindValue(':tileID', $tile['tileID'], PDO::PARAM_STR);
-        $stmt->bindValue(':questTitle', $tile['questTitle'], PDO::PARAM_STR);
-        $stmt->bindValue(':questContext', $tile['questContext'], PDO::PARAM_STR);
-        $stmt->bindValue(':questCompleted', $tile['questCompleted'], PDO::PARAM_INT);
-        $stmt->bindValue(':questCompleteDate', $tile['questCompleteDate'], PDO::PARAM_STR);
-        $stmt->bindValue(':questTargetDate', $tile['questTargetDate'], PDO::PARAM_STR);
         $stmt->execute();
-      }
+
+        // tileのクエストがすべて完了しているかチェック
+        $allQuestsCompleted = true;
+        foreach ($tile['questID'] as $questID) {
+            $stmt = $pdo->prepare('SELECT questCompleted FROM quest WHERE questID = :questID');
+            $stmt->bindValue(':questID', $questID, PDO::PARAM_STR);
+            $stmt->execute();
+            $questCompleted = $stmt->fetchColumn();
+
+            if (!$questCompleted) {
+                $allQuestsCompleted = false;
+                break;
+            }
+        }
+
+        // tileCompletedの更新
+        $tileCompleted = $allQuestsCompleted ? 1 : 0;
+        $stmt = $pdo->prepare('UPDATE tile SET tileCompleted = :tileCompleted WHERE tileID = :tileID');
+        $stmt->bindValue(':tileCompleted', $tileCompleted, PDO::PARAM_INT);
+        $stmt->bindValue(':tileID', $tile['tileID'], PDO::PARAM_STR);
+        $stmt->execute();
+
+        // tileExecutableの更新
+        $tileExecutable = 1;
+        if (!empty($tile['backTiles'])) {
+            foreach ($tile['backTiles'] as $backTileID) {
+                $stmt = $pdo->prepare('SELECT tileCompleted FROM tile WHERE tileID = :backTileID');
+                $stmt->bindValue(':backTileID', $backTileID, PDO::PARAM_STR);
+                $stmt->execute();
+                $backTileCompleted = $stmt->fetchColumn();
+
+                if (!$backTileCompleted) {
+                    $tileExecutable = 0;
+                    break;
+                }
+            }
+        }
+        $stmt = $pdo->prepare('UPDATE tile SET tileExecutable = :tileExecutable WHERE tileID = :tileID');
+        $stmt->bindValue(':tileExecutable', $tileExecutable, PDO::PARAM_INT);
+        $stmt->bindValue(':tileID', $tile['tileID'], PDO::PARAM_STR);
+        $stmt->execute();
     }
-  }
+}
 
-  $mapData = json_decode($_POST['mapData'], true);
+// JSONデータを取得
+$mapData = json_decode($_POST['mapData'], true);
 
-  saveMapData($mapData);
+// JSONデータをサーバー上に保存
+saveMapData($mapData);
 
-  $res = array('success' => true);
-  header('Content-Type: application/json');
-  echo json_encode($res);
-
-
+// レスポンスを返す（成功時）
+$response = array('success' => true, 'message' => 'Map data updated successfully.');
+header('Content-Type: application/json');
+echo json_encode($response);
 ?>

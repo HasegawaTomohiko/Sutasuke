@@ -32,7 +32,7 @@
         </div>
         <div id="headerUser">
             <div id="userIcon">
-                <img src="001.png" alt="userIcon">
+                <img src="" alt="userIcon">
             </div>
             <!-- ユーザアイコンをクリックしたときのナビゲーション -->
             <div id="userNav">
@@ -56,7 +56,7 @@
                 <button>新規作成</button>
             </div>
             <!-- ここにphpで取得したマップデータを表示する、クリックされたものをmapCanvasに出力する -->
-            <div id="mapCol"></div>
+            <div id="mapTitleView"></div>
         </div>
         <div id="mapContent">
             <div id="mapView">
@@ -106,16 +106,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.2/jquery.modal.min.css" />
     <!-- <script src="./js/tile.js"></script> -->
     <script src="./js/index.js"></script>
-
-    <div id="footer">
-
-    </div>
-
-
-    <script src="https://code.jquery.com/jquery-3.6.4.js" integrity="sha256-a9jBBRygX1Bh5lt8GZjXDzyOB+bWve9EiO7tROUtj/E=" crossorigin="anonymous"></script>
+    <script src="./js/tab.js"></script>
     <!-- <script src="./js/tile.js"></script> -->
     <!-- <script src="./js/index.js"></script> -->
-    <script src="./js/index.js"></script>
-    <script src="./js/tab.js"></script>
 </body>
 </html>

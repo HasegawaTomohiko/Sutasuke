@@ -41,35 +41,37 @@
 
     function getMapDetails($mapID){
         $pdo = db_connect();
-
-        $st = $pdo -> prepare('SELECT * FROM map WHRER mapID = :mapID');
-        $st -> bindParam(':mapID', $mapID, PDO::PARAM_STR);
-        $st -> execute();
-        $mapDetails = $st -> fetch(PDO::FETCH_ASSOC);
-
-        
+    
+        //mapIDを基にマップの全データを取得
+        $st = $pdo->prepare('SELECT * FROM map WHERE mapID = :mapID');
+        $st->bindParam(':mapID', $mapID, PDO::PARAM_STR);
+        $st->execute();
+        $mapDetails = $st->fetch(PDO::FETCH_ASSOC);
+    
+        //mapIDを基にtileの情報を取得
         $stmt = $pdo->prepare('SELECT * FROM tile WHERE mapID = :mapID');
         $stmt->bindValue(':mapID', $mapID, PDO::PARAM_STR);
         $stmt->execute();
         $tiles = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-        $stmt = $pdo->prepare('SELECT * FROM tileConnect WHERE tileStart IN (SELECT tileID FROM tile WHERE mapID = :mapID)');
+    
+        //mapIDを基にtileIDを取得し、それらが含まれているtileStartとtileToの情報を取得する
+        $stmt = $pdo->prepare('SELECT * FROM tileConnection WHERE tileStart IN (SELECT tileID FROM tile WHERE mapID = :mapID) OR tileTo IN (SELECT tileID FROM tile WHERE mapID = :mapID)');
         $stmt->bindValue(':mapID', $mapID, PDO::PARAM_STR);
         $stmt->execute();
         $tileConnects = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
+    
+        //mapIDを基にtileIDを取得し、それらが持っているquestIDを取得する
         $stmt = $pdo->prepare('SELECT * FROM quest WHERE tileID IN (SELECT tileID FROM tile WHERE mapID = :mapID)');
         $stmt->bindValue(':mapID', $mapID, PDO::PARAM_STR);
         $stmt->execute();
         $quests = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
+    
         $mapData = array(
             'mapID' => $mapDetails['mapID'],
             'mapTitle' => $mapDetails['mapTitle'],
-            'mapContext' => $mapDetails['mapContext'],
             'tiles' => array()
         );
-
+    
         foreach ($tiles as $tile) {
             $tileData = array(
                 'tileID' => $tile['tileID'],
@@ -83,25 +85,25 @@
                 'tileExecutable' => false,
                 'questID' => array()
             );
-
+    
             foreach ($tileConnects as $tileConnect) {
-                if ($tileConnect['tileStart'] === $tile['tileID']) {
-                    $tileData['nextTiles'][] = $tileConnect['tileTo'];
+                if ($tileConnect['tilestart'] === $tile['tileID']) {
+                    $tileData['nextTiles'][] = $tileConnect['tileto'];
                 }
-                if ($tileConnect['tileTo'] === $tile['tileID']) {
-                    $tileData['backTiles'][] = $tileConnect['tileStart'];
+                if ($tileConnect['tileto'] === $tile['tileID']) {
+                    $tileData['backTiles'][] = $tileConnect['tilestart'];
                 }
             }
-
+    
             foreach ($quests as $quest) {
                 if ($quest['tileID'] === $tile['tileID']) {
                     $tileData['questID'][] = $quest['questID'];
                 }
             }
-
+    
             $mapData['tiles'][] = $tileData;
         }
-
+    
         return $mapData;
     }
 
@@ -142,7 +144,7 @@
         return $createQuest -> execute();
     }
 
-    function generateID($length){
+    function generateID($length){ // 62 ^ 15
         $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
         $randomString = '';
         for($i = 0;$i < $length; $i++){

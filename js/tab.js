@@ -13,9 +13,6 @@ switchBtn.addEventListener('click', ()=> {
   changeElement(nav);
 }, false);
 
-
-
-
 //アイコン色
 const colorOptions = document.querySelectorAll('.color-option');
 const userIcon = document.getElementById('userIcon');
