@@ -33,17 +33,24 @@
         <div id="headerUser">
             <div id="userIcon">
                 <img src="" alt="userIcon">
+                <img  id="iconnow" src="img/icon/001.png" alt="userIcon">
             </div>
             <!-- ユーザアイコンをクリックしたときのナビゲーション -->
             <div id="userNav">
                 <div id="userSetting">ユーザ設定</div>
                 <div id="user-icon" class="icon"></div>
-                <div><?= $userID ?></div>
-                <ul id="color-list">
-                <li class="color-option" data-color="red" style="background-color: red;"></li>
-                <li class="color-option" data-color="blue" style="background-color: blue;"></li>
-                <li class="color-option" data-color="green" style="background-color: green;"></li>
-                </ul>
+                <div id="user-name"><?= $userID ?></div>
+                <ul class="horizontal-list">
+                    <li><img  id="iconsize" src="img/icon/001.png" alt="Icon 1" onclick="saveIcon(this)"></li>
+                    <li><img  id="iconsize" src="img/icon/002.png" alt="Icon 2"onclick="saveIcon(this)"></li>
+                    <li><img  id="iconsize" src="img/icon/003.png" alt="Icon 3"onclick="saveIcon(this)"></li>
+                    <li><img  id="iconsize" src="img/icon/004.png" alt="Icon 3"onclick="saveIcon(this)"></li>
+                    <li><img  id="iconsize" src="img/icon/005.png" alt="Icon 3"onclick="saveIcon(this)"></li>
+                    <li><img  id="iconsize" src="img/icon/006.png" alt="Icon 3"onclick="saveIcon(this)"></li>
+
+                    </ul>
+                    <button id="iconbtn" onclick="selectIcon()">Select Icon</button>
+
                 <div id="logout"><a href="#">logout</a></div>
             </div>
         </div>
@@ -86,6 +93,7 @@
                 <!-- ここにphpで取得したクエストを追加する -->
                 <div id="mapQuestAdd">
                     <button>クエスト作成</button>
+                    
                 </div>
             </div>
         </div>

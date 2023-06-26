@@ -28,8 +28,8 @@ div#header{
     background-color: rgb(254, 254, 254);
     width:40px;
     height:40px;
-    top:5px;
-    right:20px;
+    top:12px;
+    right:30px;
     border: 1px  gray solid;
     border-radius: 50%;
   }
@@ -60,11 +60,50 @@ div#header{
 
 
       /* ボタンが押されると表示する */
+      pointer-events: auto;
+      justify-content: flex-start; 
       display: none;
     }
 
 div#userSetting{
   padding: 20px 10px 20px 10px;
+}
+
+div#user-name{
+  padding: 0 10px 10px 10px;
+}
+
+.horizontal-list {
+  list-style: none;
+  display: flex;
+  justify-content: space-between;
+
+}
+
+.horizontal-list li {
+
+}
+
+
+img#iconnow{
+  height: 40px;
+
+}
+
+img#iconsize{
+  height: 40px;
+  border-radius: 50%;
+
+  border: 1px black;
+
+}
+
+button#iconbtn{
+border: solid 1px #333;
+padding: 20px 10px 20px 10px;
+
+text-align: center;
+
 }
 
 div#logout{
