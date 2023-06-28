@@ -60,26 +60,11 @@
         <!-- マップナビゲーション -->
         <div id="mapNav">
             <div id="mapCreate">
-            <button type="button" onclick="openModal()">新規作成</button>
+                <button type="button" onclick="openModal()">新規作成</button>
 
-            <div id="formModal" class="modal">
-
-        <form action="" class="form">
-
-        <h2>マップ新規</h2>
-
-        <input type="text" placeholder="マップ名"/><br/>
-
-        <input type="text" placeholder="マップメモ"/><br/>
-
-        <input type="submit" value="戻る" onclick="window.location.href='../'">
-
-        <input type="submit" value="登録" onclick="window.location.href='../'">
-
-</form>
+                <!-- ここにphpで取得したマップデータを表示する、クリックされたものをmapCanvasに出力する -->
+                <div id="mapTitleView"></div>
             </div>
-            <!-- ここにphpで取得したマップデータを表示する、クリックされたものをmapCanvasに出力する -->
-            <div id="mapTitleView"></div>
         </div>
         <div id="mapContent">
             <div id="mapView">
@@ -109,20 +94,29 @@
                 <!-- ここにphpで取得したクエストを追加する -->
                 <div id="mapQuestAdd">
                     <button>クエスト作成</button>
-                    
                 </div>
             </div>
         </div>
     </div>
 
-    <div id="formModal" class="modal">
+    <div id="createTile" class="modal">
         <form action="" class="form">
             <h2>タイル追加</h2>
-            <input type="text" placeholder="タイル名"/><br/>
-            <input type="text" placeholder="タイルメモ"/><br/>
+            <input type="text" it="tile" placeholder="タイル名"/><br/>
+            <input type="text" id="context" placeholder="タイルメモ"/><br/>
+            <input type="text" name="" id="color">
             <input type="submit" value="戻る" onclick="window.location.href='../'">
             <input type="submit" value="登録" onclick="window.location.href='../'">
         </form>
+    </div>
+
+    <div id="createMap" class="modal">
+        <form maction="" class="form">
+            <h2>マップ新規作成</h2>
+            <input type="text" placeholder="マップ名"/><br/>
+            <input type="submit" value="戻る" onclick="window.location.href='../'">
+            <input type="submit" value="登録" onclick="window.location.href='../'">
+        </for>
     </div>
 
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>

@@ -7,7 +7,6 @@ tileLayer.height = canvas.height;
 lineLayer.width = canvas.width;
 lineLayer.height = canvas.height;
 
-
 canvas.getContext('2d').drawImage(lineLayer, 0 , 0);
 canvas.getContext('2d').drawImage(tileLayer, 0 , 0);
 
@@ -28,6 +27,17 @@ $(document).ready( () => {
     success: (res) => {
       console.log('success!!!!');
       var mapDataView = $('#mapTitleView');
+
+      
+      $('#mapCanvas').click(function(event) {
+        event.preventDefault();
+        $('#formModal').modal({
+          escapeClose: false,
+          clickClose: false,
+          showClose: false
+        });
+      });
+  
       //mapTitleをクリックしたときの動作
       mapDataView.on('click','.mapTitle', () => {
         var mapID = $(event.target).attr('data-mapid');
@@ -70,15 +80,7 @@ $(document).ready( () => {
     }
   });
 
-  $('#mapCanvas').click(function(event) {
-    event.preventDefault();
-    $('#formModal').modal({
-      escapeClose: false,
-      clickClose: false,
-      showClose: false
-    });
-  });
-
+  //Cookie取得
   function getCookie(name){
     var cookies = document.cookie.split(';');
     for(var i = 0;i < cookies.length;i++){
@@ -90,6 +92,7 @@ $(document).ready( () => {
     return '';
   }
 
+  //マップ作成プログラム
   function generateMap(mapData) {
     let mapTiles = [];
   
@@ -128,6 +131,7 @@ $(document).ready( () => {
     return mapTiles;
   }
   
+  //再描画
   function redrawMap(mapTiles) {
     tileLayer.getContext('2d').clearRect(0, 0, canvas.width, canvas.height);
     lineLayer.getContext('2d').clearRect(0, 0, canvas.width, canvas.height);
@@ -143,6 +147,7 @@ $(document).ready( () => {
     canvas.getContext('2d').drawImage(tileLayer, 0, 0);
   }
   
+  //タイル描画
   function drawTile(tile) {
     tileLayer.getContext('2d').beginPath();
     tileLayer.getContext('2d').arc(tile.x, tile.y, 20, 0, Math.PI * 2);
@@ -151,6 +156,7 @@ $(document).ready( () => {
     tileLayer.getContext('2d').closePath();
   }
   
+  //ライン描画
   function drawConnections(tile) {
     for (let i = 0; i < tile.nextTiles.length; i++) {
       let nextTile = tile.nextTiles[i];

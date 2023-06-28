@@ -160,6 +160,7 @@ div#content div#mapContent div#mapView{
 div#content div#mapContent div#mapView div#mapContentView{
   overflow:auto;
   height:65vh;
+  
 }
 div#content div#mapContent div#mapQuestNav{
   width:100vw;

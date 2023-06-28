@@ -51,13 +51,13 @@ CREATE TABLE quest(
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 
-INSERT INTO map (mapID, userID, mapTitle, mapRegistDate, mapUpdateDate) VALUES
+INSERT INTO map (mapID, userID, mapTitle, mapRegistDate, mapUpdateDate) VALUE
 ('map1', 'hasegawa', 'Map 1', NOW(), NOW()),
 ('map2', 'hasegawa', 'Map 2', NOW(), NOW()),
 ('map3', 'hasegawa', 'Map 3', NOW(), NOW());
 
 -- タイルテーブル (tile)
-INSERT INTO tile (tileID, mapID, tileTitle, tileContext, tileX, tileY, tileCompleted, tileExecutable) VALUES
+INSERT INTO tile (tileID, mapID, tileTitle, tileContext, tileX, tileY, tileCompleted, tileExecutable) VALUE
 ('tile1', 'map1', 'Tile 1', 'Tile 1 Context', 100, 100, 0, 0),
 ('tile2', 'map1', 'Tile 2', 'Tile 2 Context', 200, 200, 0, 0),
 ('tile3', 'map2', 'Tile 3', 'Tile 3 Context', 300, 300, 0, 0),
@@ -65,14 +65,14 @@ INSERT INTO tile (tileID, mapID, tileTitle, tileContext, tileX, tileY, tileCompl
 ('tile5', 'map3', 'Tile 5', 'Tile 5 Context', 500, 500, 0, 0);
 
 -- タイル接続テーブル (tileConnection)
-INSERT INTO tileConnection (tilestart, tileto) VALUES
+INSERT INTO tileConnection (tilestart, tileto) VALUE
 ('tile1', 'tile2'),
 ('tile2', 'tile3'),
 ('tile3', 'tile4'),
 ('tile4', 'tile5');
 
 -- クエストテーブル (quest)
-INSERT INTO quest (questID, tileID, questTitle, questContext, questCompleted, questCompleteDate, questTargetDate) VALUES
+INSERT INTO quest (questID, tileID, questTitle, questContext, questCompleted, questCompleteDate, questTargetDate) VALUE
 ('quest1', 'tile1', 'Quest 1', 'Quest 1 Context', 0, NOW(), NOW()),
 ('quest2', 'tile1', 'Quest 2', 'Quest 2 Context', 0, NOW(), NOW()),
 ('quest3', 'tile2', 'Quest 3', 'Quest 3 Context', 0, NOW(), NOW()),
