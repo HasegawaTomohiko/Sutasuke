@@ -1,0 +1,10 @@
+<<<Githubへのpullする方法
+
+git add
+
+
+git add [ファイル名]
+git commit -m "なんかメモを書く"
+git pull origin dev
+git push origin dev
+

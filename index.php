@@ -60,7 +60,23 @@
         <!-- マップナビゲーション -->
         <div id="mapNav">
             <div id="mapCreate">
-                <button>新規作成</button>
+            <button type="button" onclick="openModal()">新規作成</button>
+
+            <div id="formModal" class="modal">
+
+        <form action="" class="form">
+
+        <h2>マップ新規</h2>
+
+        <input type="text" placeholder="マップ名"/><br/>
+
+        <input type="text" placeholder="マップメモ"/><br/>
+
+        <input type="submit" value="戻る" onclick="window.location.href='../'">
+
+        <input type="submit" value="登録" onclick="window.location.href='../'">
+
+</form>
             </div>
             <!-- ここにphpで取得したマップデータを表示する、クリックされたものをmapCanvasに出力する -->
             <div id="mapTitleView"></div>
