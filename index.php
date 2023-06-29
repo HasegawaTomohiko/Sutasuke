@@ -42,6 +42,13 @@
         </div>
         <div id="mapContent">
             <div id="mapView">
+            <!-- 編集ボタン -->
+            <div id="EditButton">
+                <button onclick="toggleButtons()">編集</button>
+                <button id="tileMove" style="display: none;">タイル移動</button>
+                <button id="tileAdd" style="display: none;">タイル追加</button>
+                <button id="tileEdit" style="display: none;">タイル編集</button>
+            </div>
                 <!-- マップ編集ツール -->
                 <div id="mapEdit">
                     <div id="mapEditMode"></div>

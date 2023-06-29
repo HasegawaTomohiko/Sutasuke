@@ -1,54 +1,53 @@
-let canvas = document.getElementById('mapCanvas');
-let tileLayer = document.createElement('canvas');
-let lineLayer = document.createElement('canvas');
+let canvas = $('#mapCanvas')[0];
+let tileLayer = $('<canvas></canvas>')[0];
+let lineLayer = $('<canvas></canvas>')[0];
 
 class Tile {
   constructor(x, y, color) {
-      this.x = x;
-      this.y = y;
-      this.color = color;
-      this.nextTiles = [];
+    this.x = x;
+    this.y = y;
+    this.color = color;
+    this.nextTiles = [];
   }
 
   draw() {
-      tileLayer.getContext('2d').beginPath();
-      tileLayer.getContext('2d').arc(this.x, this.y, 20, 0, Math.PI * 2);
-      tileLayer.getContext('2d').fillStyle = this.color;
-      tileLayer.getContext('2d').fill();
-      tileLayer.getContext('2d').closePath();
+    tileLayer.getContext('2d').beginPath();
+    tileLayer.getContext('2d').arc(this.x, this.y, 20, 0, Math.PI * 2);
+    tileLayer.getContext('2d').fillStyle = this.color;
+    tileLayer.getContext('2d').fill();
+    tileLayer.getContext('2d').closePath();
   }
 
   connectTo(nextTile) {
-      this.nextTiles.push(nextTile);
-  }
-  backconnectTo(backTile){
-      this.backTile.push(backTile);
+    this.nextTiles.push(nextTile);
   }
 
   drawConnections() {
-      for (let i = 0; i < this.nextTiles.length; i++) {
-          lineLayer.getContext('2d').save();
-          lineLayer.getContext('2d').beginPath();
-          lineLayer.getContext('2d').moveTo(this.x, this.y);
-          lineLayer.getContext('2d').lineTo(this.nextTiles[i].x, this.nextTiles[i].y);
-          lineLayer.getContext('2d').strokeStyle = 'black';
-          lineLayer.getContext('2d').stroke();
-          lineLayer.getContext('2d').closePath();
-      }
+    for (let i = 0; i < this.nextTiles.length; i++) {
+      lineLayer.getContext('2d').save();
+      lineLayer.getContext('2d').beginPath();
+      lineLayer.getContext('2d').moveTo(this.x, this.y);
+      lineLayer.getContext('2d').lineTo(this.nextTiles[i].x, this.nextTiles[i].y);
+      lineLayer.getContext('2d').strokeStyle = 'black';
+      lineLayer.getContext('2d').stroke();
+      lineLayer.getContext('2d').closePath();
+    }
   }
 
   isDragging = false;
   dragStartX = 0;
   dragStartY = 0;
-  isMouseOver(mouseX,mouseY){
-      this.isDragging = true;
-      this.dragStartX = mouseX;
-      this.dragStartY = mouseY;
+
+  isMouseOver(mouseX, mouseY) {
+    this.isDragging = true;
+    this.dragStartX = mouseX;
+    this.dragStartY = mouseY;
   }
 
-  stopDragging(){
-      this.isDragging = false;
+  stopDragging() {
+    this.isDragging = false;
   }
+
   drag(mouseX, mouseY) {
     if (this.isDragging) {
       this.x += mouseX - this.dragStartX;
@@ -62,19 +61,19 @@ class Tile {
 function generateMap(mapData) {
   let mapTiles = [];
   for (let i = 0; i < mapData.tiles.length; i++) {
-      let tileData = mapData.tiles[i];
-      let tile = new Tile(tileData.x, tileData.y,tileData.color);
-      mapTiles.push(tile);
+    let tileData = mapData.tiles[i];
+    let tile = new Tile(tileData.x, tileData.y, tileData.color);
+    mapTiles.push(tile);
   }
 
   for (let i = 0; i < mapData.tiles.length; i++) {
-      let tileData = mapData.tiles[i];
-      let tile = mapTiles[i];
-      let nextTileIds = tileData.nextTiles;
-      for (let j = 0; j < nextTileIds.length; j++) {
+    let tileData = mapData.tiles[i];
+    let tile = mapTiles[i];
+    let nextTileIds = tileData.nextTiles;
+    for (let j = 0; j < nextTileIds.length; j++) {
       let nextTile = mapTiles[nextTileIds[j]];
       tile.connectTo(nextTile);
-      }
+    }
   }
 
   return mapTiles;
@@ -82,28 +81,23 @@ function generateMap(mapData) {
 
 tileLayer.width = canvas.width;
 tileLayer.height = canvas.height;
-//let tileContext = tileLayer.getContext('2d');
 
 lineLayer.width = canvas.width;
 lineLayer.height = canvas.height;
-//let lineContext = lineLayer.getContext('2d');
 
-//getMapDataでクリックした時のMapIDを元にMapDataを取得する
-//追加予定 : backTilesを追加して後ろのTileを参照できるようにする
 let mapData = {
-  "tiles": [
-      {"x": 30, "y": 30, "color": "red", "nextTiles": [1,5]},
-      {"x": 80, "y": 30, "color": "green", "nextTiles": [2, 3]},
-      {"x": 80, "y": 80, "color": "blue", "nextTiles": [4]},
-      {"x": 130, "y": 30, "color": "yellow", "nextTiles": [5]},
-      {"x": 130, "y": 80, "color": "purple", "nextTiles": [6]},
-      {"x": 130, "y": 130, "color": "orange", "nextTiles": [7]},
-      {"x": 180, "y": 30, "color": "pink", "nextTiles": []},
-      {"x": 180, "y": 80, "color": "cyan", "nextTiles": [4, 5, 6]}
-  ]
+  tiles: [
+    { x: 30, y: 30, color: 'red', nextTiles: [1, 5] },
+    { x: 80, y: 30, color: 'green', nextTiles: [2, 3] },
+    { x: 80, y: 80, color: 'blue', nextTiles: [4] },
+    { x: 130, y: 30, color: 'yellow', nextTiles: [5] },
+    { x: 130, y: 80, color: 'purple', nextTiles: [6] },
+    { x: 130, y: 130, color: 'orange', nextTiles: [7] },
+    { x: 180, y: 30, color: 'pink', nextTiles: [] },
+    { x: 180, y: 80, color: 'cyan', nextTiles: [4, 5, 6] },
+  ],
 };
 
-//マップ切り替え時に行う(if 新規作成click - );
 let mapTiles = generateMap(mapData);
 
 for (let i = 0; i < mapTiles.length; i++) {
@@ -111,15 +105,31 @@ for (let i = 0; i < mapTiles.length; i++) {
   mapTiles[i].drawConnections();
 }
 
-canvas.getContext('2d').drawImage(lineLayer, 0 , 0);
-canvas.getContext('2d').drawImage(tileLayer, 0 , 0);
+canvas.getContext('2d').drawImage(lineLayer, 0, 0);
+canvas.getContext('2d').drawImage(tileLayer, 0, 0);
 
-//追加
+function toggleButtons() {
+  var button1 = $('#tileMove');
+  var button2 = $('#tileAdd');
+  var button3 = $('#tileEdit');
+
+  if (button1.css('display') === 'none') {
+    button1.css('display', 'inline-block');
+    button2.css('display', 'inline-block');
+    button3.css('display', 'inline-block');
+  } else {
+    button1.css('display', 'none');
+    button2.css('display', 'none');
+    button3.css('display', 'none');
+  }
+}
+
 canvas.addEventListener('mousedown', handleMouseDown);
 canvas.addEventListener('mouseup', handleMouseUp);
 canvas.addEventListener('mousemove', handleMouseMove);
 
 let selectedTile = null;
+let isTileMoving = false;
 
 function handleMouseDown(event) {
   const mouseX = event.offsetX;
@@ -151,7 +161,7 @@ function handleMouseUp(event) {
 }
 
 function handleMouseMove(event) {
-  if (selectedTile) {
+  if (selectedTile && isTileMoving) {
     const mouseX = event.offsetX;
     const mouseY = event.offsetY;
     selectedTile.drag(mouseX, mouseY);
@@ -172,5 +182,19 @@ function redrawMap() {
   canvas.getContext('2d').drawImage(lineLayer, 0, 0);
   canvas.getContext('2d').drawImage(tileLayer, 0, 0);
 }
+
+$('#tileMove').on('click', function () {
+  isTileMoving = !isTileMoving; // タイル移動フラグを切り替える
+});
+
+$('#tileAdd').on('click', function () {
+  isTileMoving = false; // タイル移動フラグを無効にする
+  // 他のボタンを押した場合の処理を追加する
+});
+
+$('#tileEdit').on('click', function () {
+  isTileMoving = false; // タイル移動フラグを無効にする
+  // 他のボタンを押した場合の処理を追加する
+});
 
 redrawMap();
