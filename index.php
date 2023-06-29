@@ -99,16 +99,34 @@
         </div>
     </div>
 
-    <div id="createTile" class="modal">
+
+
+    <!-- タイル追加モーダル -->
+    <div id="formModal" class="modal">
         <form action="" class="form">
             <h2>タイル追加</h2>
-            <input type="text" it="tile" placeholder="タイル名"/><br/>
-            <input type="text" id="context" placeholder="タイルメモ"/><br/>
-            <input type="text" name="" id="color">
-            <input type="submit" value="戻る" onclick="window.location.href='../'">
-            <input type="submit" value="登録" onclick="window.location.href='../'">
+            <label for="tileTitle"></label>
+            <input type="text" id="tileTitle" name="tileTitle" placeholder="タイルタイトル"/><br/>
+            <label for="tileContext"></label>
+            <input type="text" id="tileContext" name="tileContext" placeholder="タイルメモ"/><br/>
+            <label for="tileColor"></label>
+            <input type="text" id="tileColor" name="tileColor" placeholder="タイルの色"/><br/>
+            <button type="button">戻る</button>
+            <button type="submit">登録</button>
         </form>
     </div>
+
+
+    <div id="footer">
+
+    </div>
+
+
+    <script src="https://code.jquery.com/jquery-3.6.4.js" integrity="sha256-a9jBBRygX1Bh5lt8GZjXDzyOB+bWve9EiO7tROUtj/E=" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.2/jquery.modal.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.2/jquery.modal.min.css" />
+    
 
     <div id="createMap" class="modal">
         <form maction="" class="form">
