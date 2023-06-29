@@ -71,9 +71,9 @@
             <!-- 編集ボタン -->
             <div id="EditButton">
                 <button id="editTools"><img  id="editimg" src="img/site/btnedit.png"></button>
-                <button id="tileMove" style="display: none;"><img id="editimg" src="img/site/tilelink.png"></button>
+                <button id="tileMove" style="display: none;"><img id="editimg" src="img/site/tilemove.png"></button>
                 <button id="tileAdd" style="display: none;"><img id="editimg" src="img/site/tileadd.png"></button>
-                <button id="tileEdit" style="display: none;"><img id="editimg" src="img/site/tilemove.png"></button>
+                <button id="tileEdit" style="display: none;"><img id="editimg" src="img/site/tilelink.png"></button>
             </div>
                 <!-- マップ編集ツール -->
                 <div id="mapEdit">
@@ -111,7 +111,6 @@
             <input type="text" id="tileContext" name="tileContext" placeholder="タイルメモ"/><br/>
             <label for="tileColor"></label>
             <input type="text" id="tileColor" name="tileColor" placeholder="タイルの色"/><br/>
-            <button type="button">戻る</button>
             <button type="submit">登録</button>
         </form>
     </div>
@@ -123,9 +122,7 @@
 
 
     <script src="https://code.jquery.com/jquery-3.6.4.js" integrity="sha256-a9jBBRygX1Bh5lt8GZjXDzyOB+bWve9EiO7tROUtj/E=" crossorigin="anonymous"></script>
-    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.2/jquery.modal.min.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.2/jquery.modal.min.css" />
     
 
     <div id="createMap" class="modal">
@@ -136,8 +133,6 @@
             <input type="submit" value="登録" onclick="window.location.href='../'">
         </for>
     </div>
-
-    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.2/jquery.modal.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.2/jquery.modal.min.css" />
     <!-- <script src="./js/tile.js"></script> -->

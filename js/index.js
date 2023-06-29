@@ -39,14 +39,16 @@ $(document).ready( () => {
 
       //mapナビクリック(バグ)
       $('#mapCanvas').click(function(event) {
-        event.preventDefault();
-        $('#formModal').modal({
-          escapeClose: false,
-          clickClose: false,
-          showClose: false
-        });
+        if(isTileAdd){
+          event.preventDefault();
+          $('#formModal').modal({
+            escapeClose: true,
+            clickClose: true,
+            showClose: false,
+          });
+        }
       });
-  
+
       //mapTitleをクリックしたときの動作
       mapDataView.on('click','.mapTitle', () => {
         var mapID = $(event.target).attr('data-mapid');
@@ -92,21 +94,24 @@ $(document).ready( () => {
   //編集ツールの表示/非表示
   $('#editTools').click( () => {
     toggleButtons();
-    $('#tileMove').click( () => {
-      isTileAdd  = false;
-      isLineEdit = false;
-      isTileMove = true;
-    });
-    $('#tileAdd').click( () => {
-      isTileMove = false;
-      isLineEdit = false;
-      isTileAdd  = true;
-    });
-    $('tileEdit').click( () => {
-      isTileMove = false;
-      isTileAdd  = false;
-      isLineAdd  = true;
-    });
+  });
+  $('#tileMove').click( () => {
+    isTileAdd  = false;
+    isLineEdit = false;
+    isTileMove = true;
+    console.log('isTileMove : ' + isTileMove);
+  });
+  $('#tileAdd').click( () => {
+    isTileMove = false;
+    isLineEdit = false;
+    isTileAdd  = true;
+    console.log('isTileAdd : ' + isTileAdd);
+  });
+  $('tileEdit').click( () => {
+    isTileMove = false;
+    isTileAdd  = false;
+    isLineAdd  = true;
+    console.log('isLineAdd : ' + isLineAdd);
   });
 
   //Cookie取得
@@ -244,11 +249,13 @@ $(document).ready( () => {
         break;
       }
     }
+
+    //ここでタイルを取得出来る。
     redrawMap(mapTiles);
   }
   
   function handleMouseUp(event) {
-    if (selectedTile) {
+    if (selectedTile && isTileMove) {
       //バグ
       //selectedTile.stopDragging();
       selectedTile = false;
@@ -261,7 +268,7 @@ $(document).ready( () => {
   }
   
   function handleMouseMove(event) {
-    if (selectedTile) {
+    if (selectedTile && isTileMove) {
       //バグ
       //selectedTile.drag(mouseX, mouseY);
       mapTiles[selectedTileIndex].tileX = event.offsetX;
