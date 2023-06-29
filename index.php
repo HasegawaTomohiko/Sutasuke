@@ -36,23 +36,6 @@
                 <img  id="iconnow" src="img/icon/001.png" alt="userIcon">
             </div>
             <!-- ユーザアイコンをクリックしたときのナビゲーション -->
-            <div id="userNav">
-                <div id="userSetting">ユーザ設定</div>
-                <div id="user-icon" class="icon"></div>
-                <div id="user-name"><?= $userID ?></div>
-                <ul class="horizontal-list">
-                    <li><img  id="iconsize" src="img/icon/001.png" alt="Icon 1" onclick="saveIcon(this)"></li>
-                    <li><img  id="iconsize" src="img/icon/002.png" alt="Icon 2"onclick="saveIcon(this)"></li>
-                    <li><img  id="iconsize" src="img/icon/003.png" alt="Icon 3"onclick="saveIcon(this)"></li>
-                    <li><img  id="iconsize" src="img/icon/004.png" alt="Icon 3"onclick="saveIcon(this)"></li>
-                    <li><img  id="iconsize" src="img/icon/005.png" alt="Icon 3"onclick="saveIcon(this)"></li>
-                    <li><img  id="iconsize" src="img/icon/006.png" alt="Icon 3"onclick="saveIcon(this)"></li>
-
-                    </ul>
-                    <button id="iconbtn" onclick="selectIcon()">Select Icon</button>
-
-                <div id="logout"><a href="#">logout</a></div>
-            </div>
         </div>
     </div>
 
@@ -60,11 +43,10 @@
         <!-- マップナビゲーション -->
         <div id="mapNav">
             <div id="mapCreate">
-                <button type="button" onclick="openModal()">新規作成</button>
-
+                <button type="button" id="createMap">新規作成</button>
                 <!-- ここにphpで取得したマップデータを表示する、クリックされたものをmapCanvasに出力する -->
-                <div id="mapTitleView"></div>
             </div>
+            <div id="mapTitleView"></div>
         </div>
         <div id="mapContent">
             <div id="mapView">
@@ -102,7 +84,7 @@
 
 
     <!-- タイル追加モーダル -->
-    <div id="formModal" class="modal">
+    <div id="formModalTile" class="modal">
         <form action="" class="form">
             <h2>タイル追加</h2>
             <label for="tileTitle"></label>
@@ -115,30 +97,37 @@
         </form>
     </div>
 
+    <div id="userNav">
+        <div id="userSetting">ユーザ設定</div>
+        <div id="user-icon" class="icon"></div>
+        <div id="user-name"><?= $userID ?></div>
+        <ul class="horizontal-list">
+            <li><img  id="iconsize" src="img/icon/001.png" alt="Icon 1" onclick="saveIcon(this)"></li>
+            <li><img  id="iconsize" src="img/icon/002.png" alt="Icon 2"onclick="saveIcon(this)"></li>
+            <li><img  id="iconsize" src="img/icon/003.png" alt="Icon 3"onclick="saveIcon(this)"></li>
+            <li><img  id="iconsize" src="img/icon/004.png" alt="Icon 3"onclick="saveIcon(this)"></li>
+            <li><img  id="iconsize" src="img/icon/005.png" alt="Icon 3"onclick="saveIcon(this)"></li>
+            <li><img  id="iconsize" src="img/icon/006.png" alt="Icon 3"onclick="saveIcon(this)"></li>
 
-    <div id="footer">
+            </ul>
+            <button id="iconbtn" onclick="selectIcon()">Select Icon</button>
 
+        <div id="logout"><a href="#">logout</a></div>
     </div>
 
 
-    <script src="https://code.jquery.com/jquery-3.6.4.js" integrity="sha256-a9jBBRygX1Bh5lt8GZjXDzyOB+bWve9EiO7tROUtj/E=" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.2/jquery.modal.min.js"></script>
-    
 
-    <div id="createMap" class="modal">
+    <div id="formModalMap" class="modal">
         <form maction="" class="form">
             <h2>マップ新規作成</h2>
             <input type="text" placeholder="マップ名"/><br/>
-            <input type="submit" value="戻る" onclick="window.location.href='../'">
             <input type="submit" value="登録" onclick="window.location.href='../'">
         </for>
     </div>
+    <script src="https://code.jquery.com/jquery-3.6.4.js" integrity="sha256-a9jBBRygX1Bh5lt8GZjXDzyOB+bWve9EiO7tROUtj/E=" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.2/jquery.modal.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.2/jquery.modal.min.css" />
-    <!-- <script src="./js/tile.js"></script> -->
     <script src="./js/index.js"></script>
     <script src="./js/tab.js"></script>
-    <!-- <script src="./js/tile.js"></script> -->
-    <!-- <script src="./js/index.js"></script> -->
 </body>
 </html>

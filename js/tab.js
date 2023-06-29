@@ -11,7 +11,7 @@ let changeElement = (el)=> {
 
 switchBtn.addEventListener('click', ()=> {
   changeElement(nav);
-}, false);
+});
 
 //アイコン色
 const colorOptions = document.querySelectorAll('.color-option');
@@ -39,5 +39,3 @@ function changeIcon() {
   var icon = document.querySelector('ul li img:checked');
   document.getElementById('userIcon').src = icon.src;
 }
-
-

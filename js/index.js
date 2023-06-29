@@ -41,12 +41,21 @@ $(document).ready( () => {
       $('#mapCanvas').click(function(event) {
         if(isTileAdd){
           event.preventDefault();
-          $('#formModal').modal({
+          $('#formModalTile').modal({
             escapeClose: true,
             clickClose: true,
             showClose: false,
           });
         }
+      });
+
+      $('#createMap').click( (event) => {
+        event.preventDefault();
+        $('#formModalMap').modal({
+          escapeClose: true,
+          clickClose: true,
+          showClose: false,
+        });
       });
 
       //mapTitleをクリックしたときの動作
@@ -110,7 +119,7 @@ $(document).ready( () => {
   $('tileEdit').click( () => {
     isTileMove = false;
     isTileAdd  = false;
-    isLineAdd  = true;
+    isLineEdit  = true;
     console.log('isLineAdd : ' + isLineAdd);
   });
 
@@ -245,7 +254,6 @@ $(document).ready( () => {
         //tile.isMouseOver(mouseX, mouseY);
         selectedTile = true;
         selectedTileIndex = i;
-        console.log();
         break;
       }
     }
@@ -340,9 +348,9 @@ $('#submitBtn').click(function(event) {
   }
 
   // 新しいタイルを作成
-  let newTile = new Tile(mouseX, mouseY, tileColor);
+  /* let newTile = new Tile(mouseX, mouseY, tileColor);
   newTile.title = tileTitle;
-  newTile.context = tileContext;
+  newTile.context = tileContext; */
 
   // mapData に新しいタイルを追加
   mapData.tiles.push(newTile);
