@@ -9,6 +9,7 @@ class Tile {
       this.y = y;
       this.color = color;
       this.nextTiles = [];
+      this.backTile = [];
   }
 
   draw() {
@@ -115,6 +116,8 @@ for (let i = 0; i < mapTiles.length; i++) {
 canvas.getContext('2d').drawImage(lineLayer, 0 , 0);
 canvas.getContext('2d').drawImage(tileLayer, 0 , 0);
 
+
+//キャンバスモーダルの設定
 $(document).ready(function() {
   $('#mapCanvas').click(function(event) {
     event.preventDefault();
@@ -124,6 +127,41 @@ $(document).ready(function() {
       showClose: false
     });
   });
+});
+
+// 登録ボタンがクリックされた時の処理
+$('#submitBtn').click(function(event) {
+  event.preventDefault();
+
+  // 入力値を取得
+  let tileTitle = $('#tileTitle').val();
+  let tileContext = $('#tileContext').val();
+  let tileColor = $('#tileColor').val();
+
+  // マップ上のクリック位置を取得
+  let mouseX = 0;
+  let mouseY = 0;
+  if (event.pageX || event.pageY) {
+    mouseX = event.pageX;
+    mouseY = event.pageY;
+  } else if (event.clientX || event.clientY) {
+    mouseX = event.clientX + document.body.scrollLeft + document.documentElement.scrollLeft;
+    mouseY = event.clientY + document.body.scrollTop + document.documentElement.scrollTop;
+  }
+
+  // 新しいタイルを作成
+  let newTile = new Tile(mouseX, mouseY, tileColor);
+  newTile.title = tileTitle;
+  newTile.context = tileContext;
+
+  // mapData に新しいタイルを追加
+  mapData.tiles.push(newTile);
+
+  // 再描画
+  redrawMap();
+  
+  // フォームを閉じる
+  $('#formModal').modal('hide');
 });
 
 
