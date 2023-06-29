@@ -1,0 +1,109 @@
+@charset 'utf-8';
+
+
+
+body{
+  width: 500px;
+  margin: auto;
+  padding-top: 5%;
+  background-color: rgb(181, 228, 180);
+}
+
+body::-webkit-scrollbar {
+  display: none;
+}
+
+.tabbox{
+  /* width:80vw; */
+  padding: 0;
+  display:flex;
+  border:2px solid;
+  cursor:pointer;
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.tab{
+  width:50vw;
+  padding:5px;
+  text-align: center;
+  list-style: none;
+  background-color: #00c8b4;
+}
+
+.tab.active{
+  background-color:#00897B;
+  color: black;
+}
+
+/* 入れ物 */
+.formbox {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgb(255, 255, 255);
+  border-radius: 10px;
+}
+
+.panel {
+  display:none;
+  text-align: center;
+  margin: 100px;
+}
+
+.panel.active{
+  display: block;
+}
+
+
+label{
+  color: gray;
+  font-size: 2rem;
+  display: grid;
+  place-items: center;
+}
+
+input{
+  width: 360px;
+  height: 44px;
+  margin: .5em;
+  padding: 0 1em;
+  outline: none;
+  border: none;
+  border-bottom: 2px solid lightgray;
+  font-size: 1em;
+  margin-bottom: 1em;
+}
+
+input.last-child{
+  margin-bottom: none;
+}
+
+/* ボタン */
+input[name="button"]{
+  background: #00897B;
+  border: none;
+  margin-top: 50px;
+  width: 100%;
+  padding: 10px 0;
+  font-weight: 600;
+  color: #fff;
+  cursor: pointer;
+}
+input[name="button"]:hover {
+  /* マウスが載ったとき */
+  background: #00c8b4;
+
+  border: 1px solid #2c628b;
+}
+
+/* 保留 */
+/* input[name="button"]:active {
+   クリックされたとき 
+  background-image: linear-gradient(180deg, #68d3db, #e5f4fc);
+  border: 1px solid skyblue;
+} */
+
+.content::-webkit-scrollbar{
+  display:none;
+}
