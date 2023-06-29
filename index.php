@@ -70,7 +70,7 @@
             <div id="mapView">
             <!-- 編集ボタン -->
             <div id="EditButton">
-                <button onclick="toggleButtons()"><img  id="editimg" src="img/site/btnedit.png"></button>
+                <button id="editTools"><img  id="editimg" src="img/site/btnedit.png"></button>
                 <button id="tileMove" style="display: none;"><img id="editimg" src="img/site/tilelink.png"></button>
                 <button id="tileAdd" style="display: none;"><img id="editimg" src="img/site/tileadd.png"></button>
                 <button id="tileEdit" style="display: none;"><img id="editimg" src="img/site/tilemove.png"></button>

@@ -12,6 +12,12 @@ canvas.getContext('2d').drawImage(tileLayer, 0 , 0);
 
 var mapData;
 var mapTiles;
+var selectedTile = null;
+var selectedTileIndex = 0;
+
+var isTileMove = false;
+var isTileAdd  = false;
+var isLineEdit = false;
 
 //Cookieの値を取得してmapTitleViewに所有しているマップを取得する。
 $(document).ready( () => {
@@ -28,7 +34,7 @@ $(document).ready( () => {
       console.log('success!!!!');
       var mapDataView = $('#mapTitleView');
 
-      
+      //mapナビクリック(バグ)
       $('#mapCanvas').click(function(event) {
         event.preventDefault();
         $('#formModal').modal({
@@ -80,6 +86,26 @@ $(document).ready( () => {
     }
   });
 
+  //編集ツールの表示/非表示
+  $('#editTools').click( () => {
+    toggleButtons();
+    $('#tileMove').click( () => {
+      isTileAdd  = false;
+      isLineEdit = false;
+      isTileMove = true;
+    });
+    $('#tileAdd').click( () => {
+      isTileMove = false;
+      isLineEdit = false;
+      isTileAdd  = true;
+    });
+    $('tileEdit').click( () => {
+      isTileMove = false;
+      isTileAdd  = false;
+      isLineAdd  = true;
+    });
+  });
+
   //Cookie取得
   function getCookie(name){
     var cookies = document.cookie.split(';');
@@ -103,8 +129,8 @@ $(document).ready( () => {
         tileID: tileData.tileID,
         tileTitle: tileData.tileTitle,
         tileContext: tileData.tileContext,
-        x: tileData.tileX,
-        y: tileData.tileY,
+        tileX: tileData.tileX,
+        tileY: tileData.tileY,
         nextTiles: tileData.nextTiles || [],
         backTiles: tileData.backTiles || [],
         tileCompleted: tileData.tileCompleted,
@@ -150,7 +176,7 @@ $(document).ready( () => {
   //タイル描画
   function drawTile(tile) {
     tileLayer.getContext('2d').beginPath();
-    tileLayer.getContext('2d').arc(tile.x, tile.y, 20, 0, Math.PI * 2);
+    tileLayer.getContext('2d').arc(tile.tileX, tile.tileY, 20, 0, Math.PI * 2);
     tileLayer.getContext('2d').fillStyle = 'blue'; // タイルの色はここで指定
     tileLayer.getContext('2d').fill();
     tileLayer.getContext('2d').closePath();
@@ -162,8 +188,8 @@ $(document).ready( () => {
       let nextTile = tile.nextTiles[i];
       lineLayer.getContext('2d').save();
       lineLayer.getContext('2d').beginPath();
-      lineLayer.getContext('2d').moveTo(tile.x, tile.y);
-      lineLayer.getContext('2d').lineTo(nextTile.x, nextTile.y);
+      lineLayer.getContext('2d').moveTo(tile.tileX, tile.tileY);
+      lineLayer.getContext('2d').lineTo(nextTile.tileX, nextTile.tileY);
       lineLayer.getContext('2d').strokeStyle = 'black';
       lineLayer.getContext('2d').stroke();
       lineLayer.getContext('2d').closePath();
@@ -182,6 +208,9 @@ $(document).ready( () => {
         button1.style.display = "none";
         button2.style.display = "none";
         button3.style.display = "none";
+        isTileAdd = false;
+        isLineEdit = false;
+        isTileMove = false;
     }
   }
   
@@ -199,34 +228,44 @@ $(document).ready( () => {
     for (let i = 0; i < mapTiles.length; i++) {
       const tile = mapTiles[i];
       if (
-        mouseX >= tile.x - 40 &&
-        mouseX <= tile.x + 40 &&
-        mouseY >= tile.y - 40 &&
-        mouseY <= tile.y + 40
+        mouseX >= tile.tileX - 40 &&
+        mouseX <= tile.tileX + 40 &&
+        mouseY >= tile.tileY - 40 &&
+        mouseY <= tile.tileY + 40
       ) {
-        tile.isMouseOver(mouseX, mouseY);
-        selectedTile = tile;
+        //バグ
+        //tile.isMouseOver(mouseX, mouseY);
+        selectedTile = true;
+        selectedTileIndex = i;
+        console.log();
         break;
       }
     }
-  
-    redrawMap();
+    redrawMap(mapTiles);
   }
   
   function handleMouseUp(event) {
     if (selectedTile) {
-      selectedTile.stopDragging();
-      selectedTile = null;
-      redrawMap();
+      //バグ
+      //selectedTile.stopDragging();
+      selectedTile = false;
+      mapTiles[selectedTileIndex].tileX = event.offsetX;
+      mapTiles[selectedTileIndex].tileY = event.offsetY;
+      //mapData.tiles[selectedTileIndex].tileX = event.offsetX;
+      //mapData.tiles[selectedTileIndex].tileY = event.offsetY;
+      redrawMap(mapTiles);
     }
   }
   
   function handleMouseMove(event) {
     if (selectedTile) {
-      const mouseX = event.offsetX;
-      const mouseY = event.offsetY;
-      selectedTile.drag(mouseX, mouseY);
-      redrawMap();
+      //バグ
+      //selectedTile.drag(mouseX, mouseY);
+      mapTiles[selectedTileIndex].tileX = event.offsetX;
+      mapTiles[selectedTileIndex].tileY = event.offsetY;
+      //mapData.tiles[selectedTileIndex].tileX = event.offsetX;
+      //mapData.tiles[selectedTileIndex].tileY = event.offsetY;
+      redrawMap(mapTiles);
     }
   }
 });
