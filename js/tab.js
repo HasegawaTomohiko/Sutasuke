@@ -13,9 +13,6 @@ switchBtn.addEventListener('click', ()=> {
   changeElement(nav);
 }, false);
 
-
-
-
 //アイコン色
 const colorOptions = document.querySelectorAll('.color-option');
 const userIcon = document.getElementById('userIcon');
@@ -27,5 +24,20 @@ colorOptions.forEach(option => {
   });
 });
 
+
+function saveIcon(icon) {
+
+  var iconSrc = icon.src;
+
+  var userProfile = document.getElementById('user-profile');
+  userProfile.src = iconSrc;
+}
+
+function changeIcon() {
+  var divSrc = document.getElementById('userIcon').src;
+
+  var icon = document.querySelector('ul li img:checked');
+  document.getElementById('userIcon').src = icon.src;
+}
 
 

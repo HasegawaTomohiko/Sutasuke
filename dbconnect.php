@@ -31,30 +31,125 @@
         return $createUser -> execute();
     }
 
-    function getMap($userID){
+    function getMapList($userID){
         $pdo = db_connect();
-        $map = $pdo -> prepare('SELECT * from map WHERE userID = :userID');
+        $map = $pdo -> prepare('SELECT mapID, mapTitle from map WHERE userID = :userID');
         $map -> bindParam(':userID',$userID);
         $map -> execute();
         return $map -> fetch(PDO::FETCH_ASSOC);
     }
 
-    function createMap($userID,$mapData){
+    function getMapDetails($mapID){
         $pdo = db_connect();
-        $createMap = $pdo -> prepare('INSERT INTO map (userID,mapData) value (:userID,:mapData)');
+    
+        //mapIDを基にマップの全データを取得
+        $st = $pdo->prepare('SELECT * FROM map WHERE mapID = :mapID');
+        $st->bindParam(':mapID', $mapID, PDO::PARAM_STR);
+        $st->execute();
+        $mapDetails = $st->fetch(PDO::FETCH_ASSOC);
+    
+        //mapIDを基にtileの情報を取得
+        $stmt = $pdo->prepare('SELECT * FROM tile WHERE mapID = :mapID');
+        $stmt->bindValue(':mapID', $mapID, PDO::PARAM_STR);
+        $stmt->execute();
+        $tiles = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    
+        //mapIDを基にtileIDを取得し、それらが含まれているtileStartとtileToの情報を取得する
+        $stmt = $pdo->prepare('SELECT * FROM tileConnection WHERE tileStart IN (SELECT tileID FROM tile WHERE mapID = :mapID) OR tileTo IN (SELECT tileID FROM tile WHERE mapID = :mapID)');
+        $stmt->bindValue(':mapID', $mapID, PDO::PARAM_STR);
+        $stmt->execute();
+        $tileConnects = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    
+        //mapIDを基にtileIDを取得し、それらが持っているquestIDを取得する
+        $stmt = $pdo->prepare('SELECT * FROM quest WHERE tileID IN (SELECT tileID FROM tile WHERE mapID = :mapID)');
+        $stmt->bindValue(':mapID', $mapID, PDO::PARAM_STR);
+        $stmt->execute();
+        $quests = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    
+        $mapData = array(
+            'mapID' => $mapDetails['mapID'],
+            'mapTitle' => $mapDetails['mapTitle'],
+            'tiles' => array()
+        );
+    
+        foreach ($tiles as $tile) {
+            $tileData = array(
+                'tileID' => $tile['tileID'],
+                'tileTitle' => $tile['tileTitle'],
+                'tileContext' => $tile['tileContext'],
+                'tileX' => $tile['tileX'],
+                'tileY' => $tile['tileY'],
+                'nextTiles' => array(),
+                'backTiles' => array(),
+                'tileCompleted' => false,
+                'tileExecutable' => false,
+                'questID' => array()
+            );
+    
+            foreach ($tileConnects as $tileConnect) {
+                if ($tileConnect['tilestart'] === $tile['tileID']) {
+                    $tileData['nextTiles'][] = $tileConnect['tileto'];
+                }
+                if ($tileConnect['tileto'] === $tile['tileID']) {
+                    $tileData['backTiles'][] = $tileConnect['tilestart'];
+                }
+            }
+    
+            foreach ($quests as $quest) {
+                if ($quest['tileID'] === $tile['tileID']) {
+                    $tileData['questID'][] = $quest['questID'];
+                }
+            }
+    
+            $mapData['tiles'][] = $tileData;
+        }
+    
+        return $mapData;
+    }
+
+    function createMap($userID,$mapTitle){
+        $pdo = db_connect();
+        $createMap = $pdo -> prepare('INSERT INTO map (mapID,userID,mapTitle) value (:mapID,:userID,:mapTitle)');
         //create mapID -> uuid;
         //create updatetime and registtime.
+        $createMap -> bindValue(':mapID',generateID(15));
         $createMap -> bindValue(':userID',$userID);
-        $createMap -> bindValue(':mapData',$mapData);
+        $createMap -> bindValue(':mapTitle',$mapTitle);
         return $createMap -> execute();
     }
 
-    function updateMap($mapID,$mapUpdateDate,$mapData){
-        $pdo = db_connect($mapID);
+    function updateMap($mapID,$mapData){
+        $pdo = db_connect();
         $updateMap = $pdo -> prepare("UPDATE map set mapUpdateDate = :mapUpdateDate, mapData = :mapData WHERE mapID = :mapID ");
-        $updateMap -> bindParam(':mapUpdateDate',$mapUpdateDate);
+        $updateMap -> bindParam(':mapUpdateDate',date('Y-m-d H:i:s'));
         $updateMap -> bindParam(':mapData',$mapData);
         $updateMap -> bindParam(':mapID',$mapID);
         return $updateMap -> execute();
+    }
+
+    function getQuest($questIDs){ //mapDataの持つquestIDの配列を引数にそのまま参照。
+        $pdo = db_connect();
+        $quest = $pdo -> prepare("SELECT * FROM quest WHERE IN(". substr(str_repeat(',?',count($questIDs)) , 1).")");
+        $quest -> execute();
+        return $quest -> fetch(PDO::FETCH_ASSOC);
+    }
+
+    function createQuest($questID,$questTitle,$questContext,$questTargetDate){
+        $pdo = db_connect();
+        $createQuest = $pdo -> prepare("INSERT INTO quest (questID,questTitle,questContext,questTargetDate) value (:questID,:questTitle,:questContext,:questTargetDate)");
+        $createQuest -> bindParam(":questID",$questID);
+        $createQuest -> bindParam(":questTitle",$questTitle);
+        $createQuest -> bindParam(":questContext",$questContext);
+        $createQuest -> bindParam(":questTargetDate",$questTargetDate);
+        return $createQuest -> execute();
+    }
+
+    function generateID($length){ // 62 ^ 15
+        $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        $randomString = '';
+        for($i = 0;$i < $length; $i++){
+            $randomString .= $characters[rand(0, strlen($characters) - 1)];
+        }
+        return $randomString;
     }
 ?>

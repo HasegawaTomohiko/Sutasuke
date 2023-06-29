@@ -2,6 +2,11 @@
 
     // ユーザ取得プログラム(居なかったらログインと新規登録ボタンを表示させる)
     // map取得プログラム(cookieにユーザが登録されていたらそれを使ってmapテーブルを取得)、map情報をすだれ式に表示させる
+    if(!isset($_COOKIE['userID'])){
+        header('location:./auth.php');
+    }
+
+    $userID = $_COOKIE['userID'];
 
 ?>
 
@@ -27,18 +32,25 @@
         </div>
         <div id="headerUser">
             <div id="userIcon">
-                <img src="001.png" alt="userIcon">
+                <img src="" alt="userIcon">
+                <img  id="iconnow" src="img/icon/001.png" alt="userIcon">
             </div>
             <!-- ユーザアイコンをクリックしたときのナビゲーション -->
             <div id="userNav">
                 <div id="userSetting">ユーザ設定</div>
                 <div id="user-icon" class="icon"></div>
+                <div id="user-name"><?= $userID ?></div>
+                <ul class="horizontal-list">
+                    <li><img  id="iconsize" src="img/icon/001.png" alt="Icon 1" onclick="saveIcon(this)"></li>
+                    <li><img  id="iconsize" src="img/icon/002.png" alt="Icon 2"onclick="saveIcon(this)"></li>
+                    <li><img  id="iconsize" src="img/icon/003.png" alt="Icon 3"onclick="saveIcon(this)"></li>
+                    <li><img  id="iconsize" src="img/icon/004.png" alt="Icon 3"onclick="saveIcon(this)"></li>
+                    <li><img  id="iconsize" src="img/icon/005.png" alt="Icon 3"onclick="saveIcon(this)"></li>
+                    <li><img  id="iconsize" src="img/icon/006.png" alt="Icon 3"onclick="saveIcon(this)"></li>
 
-                <ul id="color-list">
-                <li class="color-option" data-color="red" style="background-color: red;"></li>
-                <li class="color-option" data-color="blue" style="background-color: blue;"></li>
-                <li class="color-option" data-color="green" style="background-color: green;"></li>
-                </ul>
+                    </ul>
+                    <button id="iconbtn" onclick="selectIcon()">Select Icon</button>
+
                 <div id="logout"><a href="#">logout</a></div>
             </div>
         </div>
@@ -48,9 +60,11 @@
         <!-- マップナビゲーション -->
         <div id="mapNav">
             <div id="mapCreate">
-                <button>新規作成</button>
+                <button type="button" onclick="openModal()">新規作成</button>
+
+                <!-- ここにphpで取得したマップデータを表示する、クリックされたものをmapCanvasに出力する -->
+                <div id="mapTitleView"></div>
             </div>
-            <!-- ここにphpで取得したマップデータを表示する、クリックされたものをmapCanvasに出力する -->
         </div>
         <div id="mapContent">
             <div id="mapView">
@@ -86,6 +100,7 @@
     </div>
 
 
+
     <!-- タイル追加モーダル -->
     <div id="formModal" class="modal">
         <form action="" class="form">
@@ -111,9 +126,24 @@
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.2/jquery.modal.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.2/jquery.modal.min.css" />
+    
+
+    <div id="createMap" class="modal">
+        <form maction="" class="form">
+            <h2>マップ新規作成</h2>
+            <input type="text" placeholder="マップ名"/><br/>
+            <input type="submit" value="戻る" onclick="window.location.href='../'">
+            <input type="submit" value="登録" onclick="window.location.href='../'">
+        </for>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.2/jquery.modal.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.2/jquery.modal.min.css" />
     <!-- <script src="./js/tile.js"></script> -->
-    <!-- <script src="./js/index.js"></script> -->
     <script src="./js/index.js"></script>
     <script src="./js/tab.js"></script>
+    <!-- <script src="./js/tile.js"></script> -->
+    <!-- <script src="./js/index.js"></script> -->
 </body>
 </html>
