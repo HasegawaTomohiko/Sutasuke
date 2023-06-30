@@ -32,7 +32,6 @@
         </div>
         <div id="headerUser">
             <div id="userIcon">
-                <img src="" alt="userIcon">
                 <img  id="iconnow" src="img/icon/001.png" alt="userIcon">
             </div>
             <!-- ユーザアイコンをクリックしたときのナビゲーション -->
@@ -74,14 +73,23 @@
             <!-- クエスト表示ナビゲーション -->
             <div id="mapQuestNav">
                 <!-- ここにphpで取得したクエストを追加する -->
+                <div id="mapTileView"></div>
+                <div id="questView"></div>
                 <div id="mapQuestAdd">
-                    <button>クエスト作成</button>
+                    <button id="createQuest">クエスト作成</button>
                 </div>
             </div>
         </div>
     </div>
 
-
+    <!-- マップ追加モーダル -->
+    <div id="formModalMap" class="modal">
+        <form maction="" class="form">
+            <h2>マップ新規作成</h2>
+            <input type="text" placeholder="マップ名" id="mapTitle"/><br/>
+            <button id="mapAddButton">追加</button>
+        </form>
+    </div>
 
     <!-- タイル追加モーダル -->
     <div id="formModalTile" class="modal">
@@ -91,10 +99,19 @@
             <input type="text" id="tileTitle" name="tileTitle" placeholder="タイルタイトル"/><br/>
             <label for="tileContext"></label>
             <input type="text" id="tileContext" name="tileContext" placeholder="タイルメモ"/><br/>
-            <label for="tileColor"></label>
-            <input type="text" id="tileColor" name="tileColor" placeholder="タイルの色"/><br/>
-            <button type="submit">登録</button>
+            <button id="tileAddButton">追加</button>
         </form>
+    </div>
+
+    <!-- クエスト追加モーダル -->
+    <div id="formModalQuest" class="modal">
+        <form maction="" class="form">
+            <h2>クエスト追加</h2>
+            <input type="text" id="questTitle" placeholder="クエスト名"/><br/>
+            <input type="text" id="qustContext" placeholder="クエストメモ"><br>
+            <input type="date" id="questTargetDate" placeholder="クエスト目標達成日"><br>
+            <button id="questAddButton">追加</button>
+        </for>
     </div>
 
     <div id="userNav">
@@ -116,14 +133,7 @@
     </div>
 
 
-
-    <div id="formModalMap" class="modal">
-        <form maction="" class="form">
-            <h2>マップ新規作成</h2>
-            <input type="text" placeholder="マップ名"/><br/>
-            <input type="submit" value="登録" onclick="window.location.href='../'">
-        </for>
-    </div>
+  
     <script src="https://code.jquery.com/jquery-3.6.4.js" integrity="sha256-a9jBBRygX1Bh5lt8GZjXDzyOB+bWve9EiO7tROUtj/E=" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.2/jquery.modal.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.2/jquery.modal.min.css" />

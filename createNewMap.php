@@ -3,9 +3,11 @@
 
 require_once 'dbconnect.php';
 
+$mapID = $_POST['mapID'];
+$userID = $_POST['userID'];
 $mapTitle = $_POST['mapTitle'];
 
-if(createMap($mapID,$mapData)){
+if(createMap($mapID,$userID,$mapTitle)){
   $response = array();
   $response['success'] = true;
   echo json_encode($response);
@@ -14,6 +16,5 @@ if(createMap($mapID,$mapData)){
   $response['success'] = false;
   echo json_encode($response);
 }
-
 
 ?>

@@ -83,7 +83,7 @@
                 'backTiles' => array(),
                 'tileCompleted' => false,
                 'tileExecutable' => false,
-                'questID' => array()
+                'quests' => array()
             );
     
             foreach ($tileConnects as $tileConnect) {
@@ -94,10 +94,28 @@
                     $tileData['backTiles'][] = $tileConnect['tilestart'];
                 }
             }
+
+            if($tile['tileCompleted'] == 1){
+                $tileData['tileCompleted'] = true;
+            }
+
+            if($tile['tileExecutable'] == 1 || empty($tileData['backTiles'])){
+                $tileData['tileExecutable'] = true;
+            }
     
             foreach ($quests as $quest) {
                 if ($quest['tileID'] === $tile['tileID']) {
-                    $tileData['questID'][] = $quest['questID'];
+                    $tileData['quests'][] = array(
+                        'questID' => $quest['questID'],
+                        'questTitle' => $quest['questTitle'],
+                        'questContext' => $quest['questContext'],
+                        'questCompleted' => false,
+                        'questTargetDate' => $quest['questTargetDate'],
+                    );
+
+                    if($quest['questCompleted'] == 1){
+                        $tileData['quests']['questCompleted'] == true;
+                    }
                 }
             }
     
@@ -107,14 +125,14 @@
         return $mapData;
     }
 
-    function createMap($userID,$mapTitle){
+    function createMap($mapID,$userID,$mapTitle){
         $pdo = db_connect();
-        $createMap = $pdo -> prepare('INSERT INTO map (mapID,userID,mapTitle) value (:mapID,:userID,:mapTitle)');
-        //create mapID -> uuid;
-        //create updatetime and registtime.
-        $createMap -> bindValue(':mapID',generateID(15));
+        $createMap = $pdo -> prepare('INSERT INTO map (mapID,userID,mapTitle,mapRegistDate,mapUpdateDate) value (:mapID,:userID,:mapTitle,:mapRegistDate,:mapUpdateDate)');
+        $createMap -> bindValue(':mapID',$mapID);
         $createMap -> bindValue(':userID',$userID);
         $createMap -> bindValue(':mapTitle',$mapTitle);
+        $createMap -> bindValue(':mapRegistDate',date('Y-m-d H:i:s'));
+        $createMap -> bindValue(':mapUpdateDate',date('Y-m-d H:i:s'));
         return $createMap -> execute();
     }
 
