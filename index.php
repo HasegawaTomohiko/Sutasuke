@@ -86,7 +86,7 @@
     <div id="formModalMap" class="modal">
         <form maction="" class="form">
             <h2>マップ新規作成</h2>
-            <input type="text" placeholder="マップ名" id="mapTitle"/><br/>
+            <input type="text" placeholder="マップ名" id="mapTitle"/>
             <button id="mapAddButton">追加</button>
         </form>
     </div>
@@ -119,14 +119,14 @@
         <div id="user-icon" class="icon"></div>
         <div id="user-name"><?= $userID ?></div>
         <ul class="horizontal-list">
-            <li><img  id="iconsize" src="img/icon/001.png" alt="Icon 1" onclick="saveIcon(this)"></li>
-            <li><img  id="iconsize" src="img/icon/002.png" alt="Icon 2"onclick="saveIcon(this)"></li>
-            <li><img  id="iconsize" src="img/icon/003.png" alt="Icon 3"onclick="saveIcon(this)"></li>
-            <li><img  id="iconsize" src="img/icon/004.png" alt="Icon 3"onclick="saveIcon(this)"></li>
-            <li><img  id="iconsize" src="img/icon/005.png" alt="Icon 3"onclick="saveIcon(this)"></li>
-            <li><img  id="iconsize" src="img/icon/006.png" alt="Icon 3"onclick="saveIcon(this)"></li>
-
+                <li><img id="iconsize" src="img/icon/001.png" alt="Icon 1" onclick="saveIcon(this)"></li>
+                <li><img id="iconsize" src="img/icon/002.png" alt="Icon 2" onclick="saveIcon(this)"></li>
+                <li><img id="iconsize" src="img/icon/003.png" alt="Icon 3" onclick="saveIcon(this)"></li>
+                <li><img id="iconsize" src="img/icon/004.png" alt="Icon 4" onclick="saveIcon(this)"></li>
+                <li><img id="iconsize" src="img/icon/005.png" alt="Icon 5" onclick="saveIcon(this)"></li>
+                <li><img id="iconsize" src="img/icon/006.png" alt="Icon 6" onclick="saveIcon(this)"></li>
             </ul>
+            <!-- 使わない -->
             <button id="iconbtn" onclick="selectIcon()">Select Icon</button>
 
         <div id="logout"><a href="#">logout</a></div>
