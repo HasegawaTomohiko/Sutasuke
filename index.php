@@ -84,33 +84,31 @@
 
     <!-- マップ追加モーダル -->
     <div id="formModalMap" class="modal">
-        <form maction="" class="form">
+        <form class="form">
             <h2>マップ新規作成</h2>
-            <input type="text" placeholder="マップ名" id="mapTitle"/><br/>
-            <button id="mapAddButton">追加</button>
+            <input type="text" placeholder="マップ名" id="mapTitle"/><br>
+            <button type="button" id="mapAddButton">追加</button>
         </form>
     </div>
 
     <!-- タイル追加モーダル -->
     <div id="formModalTile" class="modal">
-        <form action="" class="form">
+        <form class="form">
             <h2>タイル追加</h2>
-            <label for="tileTitle"></label>
-            <input type="text" id="tileTitle" name="tileTitle" placeholder="タイルタイトル"/><br/>
-            <label for="tileContext"></label>
-            <input type="text" id="tileContext" name="tileContext" placeholder="タイルメモ"/><br/>
-            <button id="tileAddButton">追加</button>
+            <input type="text" id="tileTitle" placeholder="タイルタイトル"/><br/>
+            <input type="text" id="tileContext" placeholder="タイルメモ"/><br/>
+            <button type="button" id="tileAddButton">追加</button>
         </form>
     </div>
 
     <!-- クエスト追加モーダル -->
     <div id="formModalQuest" class="modal">
-        <form maction="" class="form">
+        <form class="form">
             <h2>クエスト追加</h2>
             <input type="text" id="questTitle" placeholder="クエスト名"/><br/>
             <input type="text" id="qustContext" placeholder="クエストメモ"><br>
             <input type="date" id="questTargetDate" placeholder="クエスト目標達成日"><br>
-            <button id="questAddButton">追加</button>
+            <button type="button" id="questAddButton">追加</button>
         </for>
     </div>
 

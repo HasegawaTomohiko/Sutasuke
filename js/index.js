@@ -7,7 +7,6 @@ tileLayer.height = canvas.height;
 lineLayer.width = canvas.width;
 lineLayer.height = canvas.height;
 
-
 canvas.getContext('2d').drawImage(lineLayer, 0 , 0);
 canvas.getContext('2d').drawImage(tileLayer, 0 , 0);
 
@@ -16,7 +15,16 @@ var mapTiles;
 var selectedTile = null;
 var selectedTileIndex = -1;
 var moveTileIndex = -1;
+var clickX = -1;
+var clickY = -1;
 
+var selectTileID = null;
+var startTileIndex = -1;
+var endTileIndex = -1;
+var startTileID = null;
+var endTileID = null;
+
+var isSelectedMap = false;
 var isTileMove = false;
 var isTileAdd  = false;
 var isLineEdit = false;
@@ -53,18 +61,19 @@ $(document).ready( () => {
         console.log('click' + mapID);
         $.ajax({
           url: 'getMapDetail.php',
-          type: 'GET',
+          type: 'POST',
           data: {mapID: mapID},
           dataType: 'json',
           success : (resp) => {
             selectedTile = null;
             selectedTileIndex = -1;
+            isSelectedMap = true;
             moveTileIndex = -1;
             mapData = resp;
-            console.log(mapData.tiles.length);
-            mapTiles = generateMap(mapData);
-            console.log(mapTiles);
-            redrawMap(mapTiles);
+            console.log(mapData);
+            //mapTiles = generateMap(mapData);
+            //console.log(mapTiles);
+            redrawMap(mapData);
           },
           error : (xhr, status, err) => {
             console.log(err);
@@ -123,7 +132,7 @@ $(document).ready( () => {
         console.log('add Mapdata!');
         $.ajax({
           url: 'getMapTitle.php',
-          type: 'GET',
+          type: 'POST',
           data: {userID : userID},
           dataType: 'json',
           success: (res) => {
@@ -136,18 +145,19 @@ $(document).ready( () => {
               console.log('click' + mapID);
               $.ajax({
                 url: 'getMapDetail.php',
-                type: 'GET',
+                type: 'POST',
                 data: {mapID: mapID},
                 dataType: 'json',
                 success : (resp) => {
                   selectedTile = null;
                   selectedTileIndex = -1;
+                  isSelectedMap = true;
                   moveTileIndex = -1;
                   mapData = resp;
                   console.log(mapData);
-                  mapTiles = generateMap(mapData);
-                  console.log(mapTiles);
-                  redrawMap(mapTiles);
+                  //mapTiles = generateMap(mapData);
+                  //console.log(mapTiles);
+                  redrawMap(mapData);
                 },
                 error : (xhr, status, err) => {
                   console.log(err);
@@ -181,9 +191,11 @@ $(document).ready( () => {
   });
 
   //mapナビクリック(バグ)
-  $('#mapCanvas').click(function(event) {
+  $('#mapCanvas').on('click',(event) => {
+    event.preventDefault();
+    clickX = event.offsetX;
+    clickY = event.offsetY;
     if(isTileAdd){
-      event.preventDefault();
       $('#formModalTile').modal({
         escapeClose: true,
         clickClose: true,
@@ -192,8 +204,54 @@ $(document).ready( () => {
     }
   });
 
-  $('tileAddButton').click( (event) => {
+  $('#tileAddButton').on('click', (event) => {
+    $('#formModalTile').modal('hide');
+    event.preventDefault();
+    var tileID = generateRandomString(15);
+    var mapID = mapData.mapID;
+    var tileTitle = $('#tileTitle').val();
+    var tileContext = $('#tileContext').val();
+    $('#tileTitle').val('');
+    $('#tileContext').val('');
 
+    $.ajax({
+      url: 'createTile.php',
+      type: 'POST',
+      data: {
+        tileID: tileID,
+        mapID: mapID,
+        tileTitle: tileTitle,
+        tileContext: tileContext,
+        tileX: clickX,
+        tileY: clickY
+      },
+      dataType: 'json',
+      success: (res) => {
+        var tileData = {
+          tileID : tileID,
+          mapID : mapID,
+          tileTitle: tileTitle,
+          tileContext: tileContext,
+          tileX: clickX,
+          tileY: clickY,
+          nextTiles: [],
+          backTiles: [],
+          tileCompleted: false,
+          tileExecutable: true,
+          quests: []
+        };
+        mapData.tiles.push(tileData);
+        console.log(mapData);
+        //mapTiles = generateMap(mapData);
+        //console.log(mapTiles);
+        redrawMap(mapData);
+      },
+      error: (xhr,status,err)=>{
+        console.log(xhr);
+        console.log(status);
+        console.log(err);
+      }
+    });
   });
   
   $('#createQuest').click( (event) => {
@@ -240,11 +298,16 @@ $(document).ready( () => {
     return '';
   }
 
-  //マップ作成プログラム
-  function generateMap(mapData) {
-    let mapTiles = [];
+  //マップ作成プログラム バグってる
+  /* function generateMap(mapData) {
+    let mapTiles = {};
   
     // タイルの描画情報を生成する
+
+    if(mapData.tiles.length == 0){
+      return mapTiles;
+    }
+
     for (let i = 0; i < mapData.tiles.length; i++) {
       let tileData = mapData.tiles[i];
       let tile = {
@@ -262,31 +325,28 @@ $(document).ready( () => {
       mapTiles.push(tile);
     }
   
-    // タイル同士の接続を行う
+    // タイル同士の接続を行う // バグってる
     for (let i = 0; i < mapData.tiles.length; i++) {
-      let tileData = mapData.tiles[i];
-      let tile = mapTiles[i];
-      let nextTileIds = tileData.nextTiles;
+      let nextTileIds = mapData.tiles[i].nextTiles;
       for (let j = 0; j < nextTileIds.length; j++) {
-        let nextTileId = nextTileIds[j];
-        let nextTile = mapTiles.find(tile => tile.tileID === nextTileId);
+        let nextTile = mapTiles.find(tile => tile.tileID === nextTileIDs[j]);
         if (nextTile) {
-          tile.nextTiles.push(nextTile);
+          mapData.tiles[i].nextTiles.push(nextTileId);
         }
       }
     }
   
     return mapTiles;
-  }
+  } */
   
   //再描画
-  function redrawMap(mapTiles) {
+  function redrawMap(mapData) {
     tileLayer.getContext('2d').clearRect(0, 0, canvas.width, canvas.height);
     lineLayer.getContext('2d').clearRect(0, 0, canvas.width, canvas.height);
     canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height);
   
-    for (let i = 0; i < mapTiles.length; i++) {
-      let tile = mapTiles[i];
+    for (let i = 0; i < mapData.tiles.length; i++) {
+      let tile = mapData.tiles[i];
       drawTile(tile);
       drawConnections(tile);
     }
@@ -312,14 +372,23 @@ $(document).ready( () => {
     tileLayer.getContext('2d').closePath();
   }
   
-  //ライン描画
+  //ライン描画 なんかおかしい気がする。
   function drawConnections(tile) {
     for (let i = 0; i < tile.nextTiles.length; i++) {
       let nextTile = tile.nextTiles[i];
+      let nextTileX;
+      let nextTileY;
+      for(let j = 0; j < mapData.tiles.length; j++) {
+        if(mapData.tiles[j].tileID === nextTile){
+          nextTileX = mapData.tiles[j].tileX;
+          nextTileY = mapData.tiles[j].tileY;
+          break;
+        }
+      }
       lineLayer.getContext('2d').save();
       lineLayer.getContext('2d').beginPath();
       lineLayer.getContext('2d').moveTo(tile.tileX, tile.tileY);
-      lineLayer.getContext('2d').lineTo(nextTile.tileX, nextTile.tileY);
+      lineLayer.getContext('2d').lineTo(nextTileX, nextTileY);
       lineLayer.getContext('2d').strokeStyle = 'black';
       lineLayer.getContext('2d').stroke();
       lineLayer.getContext('2d').closePath();
@@ -345,9 +414,11 @@ $(document).ready( () => {
   }
   
   //追加
+  
   canvas.addEventListener('mousedown', handleMouseDown);
   canvas.addEventListener('mouseup', handleMouseUp);
   canvas.addEventListener('mousemove', handleMouseMove);
+  
   
   let selectedTile = null;
   
@@ -355,8 +426,8 @@ $(document).ready( () => {
     const mouseX = event.offsetX;
     const mouseY = event.offsetY;
   
-    for (let i = 0; i < mapTiles.length; i++) {
-      const tile = mapTiles[i];
+    for (let i = 0; i < mapData.tiles.length; i++) {
+      const tile = mapData.tiles[i];
       if (
         mouseX >= tile.tileX - 40 &&
         mouseX <= tile.tileX + 40 &&
@@ -370,32 +441,79 @@ $(document).ready( () => {
         if(isTileMove){
           moveTileIndex = i;
         }
-        $('#mapTileView').html('<div id="mapTitle">' + mapTiles[selectedTileIndex].tileTitle + '</div>');
+        if(isLineEdit){
+          startTileIndex = i;
+          startTileID = tile.tileID;
+        }
+        $('#mapTileView').html('<div id="tileTitle">' + mapData.tiles[selectedTileIndex].tileTitle + '</div>');
         var questViewContent = '';
-        for(let j = 0;j < mapTiles[selectedTileIndex].quests.length;j++){
-          questViewContent += '<div id="' + mapTiles[selectedTileIndex].quests[j].questID + '" class="questViewContent">' + mapTiles[selectedTileIndex].quests[j].questTitle + '</div>';
+        for(let j = 0;j < mapData.tiles[selectedTileIndex].quests.length;j++){
+          questViewContent += '<div id="' + mapData.tiles[selectedTileIndex].quests[j].questID + '" class="questViewContent">' + mapTiles[selectedTileIndex].quests[j].questTitle + '</div>';
         }
         $('#questView').html(questViewContent);
         break;
+      } else {
+        selectedTile = false;
+        selectedTileIndex = -1;
+        $('#mapTileView').html('<div id="mapTitle">' + "タイルが選択されていません" + '</div>');
+        $('#questView').html('<div id="questViewContent">' + '</div>');
       }
     }
 
     //ここでタイルを取得出来る。
-    redrawMap(mapTiles);
+    redrawMap(mapData);
   }
   
   function handleMouseUp(event) {
+    const mouseX = event.offsetX;
+    const mouseY = event.offsetY;
     if (selectedTile && isTileMove) {
       //バグ
       //selectedTile.stopDragging();
-      selectedTile = false;
-      mapTiles[moveTileIndex].tileX = event.offsetX;
-      mapTiles[moveTileIndex].tileY = event.offsetY;
+      //mapTiles[moveTileIndex].tileX = event.offsetX;
+      //mapTiles[moveTileIndex].tileY = event.offsetY;
       mapData.tiles[selectedTileIndex].tileX = event.offsetX;
       mapData.tiles[selectedTileIndex].tileY = event.offsetY;
-      redrawMap(mapTiles);
+      
+      redrawMap(mapData);
       moveTileIndex= -1;
-
+      selectedTile = false;
+      selectedTileIndex = -1;
+    }else if(selectedTile && isLineEdit){
+      for(let i = 0;i < mapData.tiles.length;i++){
+        var tile = mapData.tiles[i];
+        if(
+          mouseX >= tile.tileX - 40 &&
+          mouseX <= tile.tileX + 40 &&
+          mouseY >= tile.tileY - 40 &&
+          mouseY <= tile.tileY + 40
+        ){
+          endTileIndex = i;
+          endTileID = mapData.tiles[i].tileID;
+          selectedTile = false;
+          //判定を後で入れる
+          if (
+            mapData.tiles[startTileIndex].nextTiles.includes(endTileID) &&
+            mapData.tiles[endTileIndex].backTiles.includes(startTileID)
+          ) {
+            // 削除する場合
+            mapData.tiles[startTileIndex].nextTiles = mapData.tiles[startTileIndex].nextTiles.filter(id => id !== endTileID);
+            mapData.tiles[endTileIndex].backTiles = mapData.tiles[endTileIndex].backTiles.filter(id => id !== startTileID);
+          } else {
+            // 追加する場合
+            mapData.tiles[startTileIndex].nextTiles.push(endTileID);
+            mapData.tiles[endTileIndex].backTiles.push(startTileID);
+          }
+          break;
+        }
+      }
+      //mapTiles = generateMap(mapData);
+      redrawMap(mapData);
+      console.log(mapData);
+      //console.log(mapTiles);
+      moveTileIndex= -1;
+      selectedTile = false;
+      selectedTileIndex = -1;
     }
   }
   
@@ -403,17 +521,27 @@ $(document).ready( () => {
     if (selectedTile && isTileMove) {
       //バグ
       //selectedTile.drag(mouseX, mouseY);
-      mapTiles[moveTileIndex].tileX = event.offsetX;
-      mapTiles[moveTileIndex].tileY = event.offsetY;
+      mapData.tiles[moveTileIndex].tileX = event.offsetX;
+      mapData.tiles[moveTileIndex].tileY = event.offsetY;
       mapData.tiles[selectedTileIndex].tileX = event.offsetX;
       mapData.tiles[selectedTileIndex].tileY = event.offsetY;
-      redrawMap(mapTiles);
+      redrawMap(mapData);
+    }else if(selectedTile && isLineEdit){
+      redrawMap(mapData);
+      lineLayer.getContext('2d').beginPath();
+      lineLayer.getContext('2d').moveTo(mapData.tiles[startTileIndex].tileX, mapData.tiles[startTileIndex].tileY);
+      lineLayer.getContext('2d').lineTo(event.offsetX,event.offsetY);
+      lineLayer.getContext('2d').strokeStyle = 'black';
+      lineLayer.getContext('2d').stroke();
+      lineLayer.getContext('2d').closePath();
+      canvas.getContext('2d').drawImage(lineLayer, 0, 0);
+      canvas.getContext('2d').drawImage(tileLayer, 0, 0);
     }
   }
 });
 
 // 登録ボタンがクリックされた時の処理
-$('#submitBtn').click(function(event) {
+/* $('#submitBtn').click(function(event) {
   event.preventDefault();
 
   // 入力値を取得
@@ -434,7 +562,7 @@ $('#submitBtn').click(function(event) {
   // 新しいタイルを作成
   /* let newTile = new Tile(mouseX, mouseY, tileColor);
   newTile.title = tileTitle;
-  newTile.context = tileContext; */
+  newTile.context = tileContext; 
 
   // mapData に新しいタイルを追加
   mapData.tiles.push(newTile);
@@ -444,7 +572,7 @@ $('#submitBtn').click(function(event) {
   
   // フォームを閉じる
   $('#formModal').modal('hide');
-});
+}); */
 
 
 // 編集ボタンのコード

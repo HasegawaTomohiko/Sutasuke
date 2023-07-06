@@ -13,7 +13,7 @@ function saveMapData($mapData) {
     $stmt->bindValue(':mapID', $mapData['mapID'], PDO::PARAM_STR);
     $stmt->execute();
 
-    // tileテーブルとtileConnectテーブルの更新
+    // tileテーブルとtileConnectテーブルの更新 ****要改造****
     foreach ($mapData['tiles'] as $tile) {
         // tileテーブルの更新
         $stmt = $pdo->prepare('UPDATE tile SET tileTitle = :tileTitle, tileContext = :tileContext, tileX = :tileX, tileY = :tileY WHERE tileID = :tileID');
@@ -38,7 +38,7 @@ function saveMapData($mapData) {
             }
         }
 
-        // tileCompletedの更新
+        // tileCompletedの更新(これをbindValueのみにさせてトランザクションを減らす)
         $tileCompleted = $allQuestsCompleted ? 1 : 0;
         $stmt = $pdo->prepare('UPDATE tile SET tileCompleted = :tileCompleted WHERE tileID = :tileID');
         $stmt->bindValue(':tileCompleted', $tileCompleted, PDO::PARAM_INT);
@@ -60,10 +60,13 @@ function saveMapData($mapData) {
                 }
             }
         }
+
         $stmt = $pdo->prepare('UPDATE tile SET tileExecutable = :tileExecutable WHERE tileID = :tileID');
         $stmt->bindValue(':tileExecutable', $tileExecutable, PDO::PARAM_INT);
         $stmt->bindValue(':tileID', $tile['tileID'], PDO::PARAM_STR);
         $stmt->execute();
+
+        //tileConnectへの情報登録
     }
 }
 

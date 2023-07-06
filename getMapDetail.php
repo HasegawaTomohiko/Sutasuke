@@ -3,7 +3,7 @@
 
   require('./dbconnect.php');
 
-  $mapID = $_GET['mapID'];
+  $mapID = $_POST['mapID'];
 
   try {
       $mapData = getMapDetails($mapID);
