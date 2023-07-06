@@ -13,29 +13,19 @@ switchBtn.addEventListener('click', ()=> {
   changeElement(nav);
 });
 
-//アイコン色
-const colorOptions = document.querySelectorAll('.color-option');
-const userIcon = document.getElementById('userIcon');
-
-colorOptions.forEach(option => {
-  option.addEventListener('click', function() {
-    const color = this.getAttribute('data-color');
-    userIcon.style.backgroundColor = color;
-  });
-});
 
 
-function saveIcon(icon) {
 
-  var iconSrc = icon.src;
+//アイコン選択 選択したアイコンのsrcを変数に
+function saveIcon(element) {
+  var src = element.getAttribute("src");
+  console.log(src); // 取得したsrcをコンソールに表示（必要に応じて他の処理を追加）
 
-  var userProfile = document.getElementById('user-profile');
-  userProfile.src = iconSrc;
+  // 他の処理を追加する場合はここに記述する
+  
+  var iconNow = document.getElementById("iconnow");
+  iconNow.src = src;
 }
 
-function changeIcon() {
-  var divSrc = document.getElementById('userIcon').src;
-
-  var icon = document.querySelector('ul li img:checked');
-  document.getElementById('userIcon').src = icon.src;
-}
+//アイコン変更機能は完成したが
+//これをユーザーごとに情報を保存するプログラムが必要
