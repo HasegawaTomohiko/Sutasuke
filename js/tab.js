@@ -1,4 +1,4 @@
-//iconをクリックしたらusernavの表示/非表示
+//iconをクリックしたらusernavの表示/非表示  functionかけ
 let switchBtn = document.getElementById('userIcon');
 let nav = document.getElementById('userNav');
 let changeElement = (el)=> {
@@ -9,13 +9,27 @@ let changeElement = (el)=> {
   }
 }
 
-switchBtn.addEventListener('click', ()=> {
+
+switchBtn.addEventListener('click', (event)=> {
+
+  event.stopPropagation();
   changeElement(nav);
+});
+
+// ドキュメント全体に対してクリックイベントを追加
+document.addEventListener('click', (event) => {
+  if (event.target === switchBtn || nav.contains(event.target)) {
+    return;
+  }
+
+  // タブを閉じる
+  nav.style.display = 'none';
 });
 
 
 
 
+//アイコンの要素クリックでやるほうがいいかも
 //アイコン選択 選択したアイコンのsrcを変数に
 function saveIcon(element) {
   var src = element.getAttribute("src");
