@@ -9,16 +9,15 @@ let changeElement = (el)=> {
   }
 }
 
-// switchBtn をクリックした場合の処理
+
 switchBtn.addEventListener('click', (event)=> {
-  // イベントの伝播を停止し、タブを開閉する
+
   event.stopPropagation();
   changeElement(nav);
 });
 
 // ドキュメント全体に対してクリックイベントを追加
 document.addEventListener('click', (event) => {
-  // クリックされた要素が switchBtn または nav の子孫要素である場合は何もしない
   if (event.target === switchBtn || nav.contains(event.target)) {
     return;
   }
@@ -30,7 +29,7 @@ document.addEventListener('click', (event) => {
 
 
 
-//アイコンの要素クリックでやるほうがよくね関数呼び出し
+//アイコンの要素クリックでやるほうがいいかも
 //アイコン選択 選択したアイコンのsrcを変数に
 function saveIcon(element) {
   var src = element.getAttribute("src");
