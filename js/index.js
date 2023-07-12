@@ -48,8 +48,7 @@ $(document).ready( () => {
   var mapData;
   $.ajax({
     url: 'getMapTitle.php',
-    type: 'GET',
-    data: {userID : userID},
+    type: 'POST',
     dataType: 'json',
     success: (res) => {
       console.log('success!!!!');
@@ -242,8 +241,6 @@ $(document).ready( () => {
         };
         mapData.tiles.push(tileData);
         console.log(mapData);
-        //mapTiles = generateMap(mapData);
-        //console.log(mapTiles);
         redrawMap(mapData);
       },
       error: (xhr,status,err)=>{
@@ -297,47 +294,6 @@ $(document).ready( () => {
     }
     return '';
   }
-
-  //マップ作成プログラム バグってる
-  /* function generateMap(mapData) {
-    let mapTiles = {};
-  
-    // タイルの描画情報を生成する
-
-    if(mapData.tiles.length == 0){
-      return mapTiles;
-    }
-
-    for (let i = 0; i < mapData.tiles.length; i++) {
-      let tileData = mapData.tiles[i];
-      let tile = {
-        tileID: tileData.tileID,
-        tileTitle: tileData.tileTitle,
-        tileContext: tileData.tileContext,
-        tileX: tileData.tileX,
-        tileY: tileData.tileY,
-        nextTiles: tileData.nextTiles || [],
-        backTiles: tileData.backTiles || [],
-        tileCompleted: tileData.tileCompleted,
-        tileExecutable: tileData.tileExecutable,
-        quests: tileData.quests || [],
-      };
-      mapTiles.push(tile);
-    }
-  
-    // タイル同士の接続を行う // バグってる
-    for (let i = 0; i < mapData.tiles.length; i++) {
-      let nextTileIds = mapData.tiles[i].nextTiles;
-      for (let j = 0; j < nextTileIds.length; j++) {
-        let nextTile = mapTiles.find(tile => tile.tileID === nextTileIDs[j]);
-        if (nextTile) {
-          mapData.tiles[i].nextTiles.push(nextTileId);
-        }
-      }
-    }
-  
-    return mapTiles;
-  } */
   
   //再描画
   function redrawMap(mapData) {
@@ -372,7 +328,6 @@ $(document).ready( () => {
     tileLayer.getContext('2d').closePath();
   }
   
-  //ライン描画 なんかおかしい気がする。
   function drawConnections(tile) {
     for (let i = 0; i < tile.nextTiles.length; i++) {
       let nextTile = tile.nextTiles[i];
@@ -394,6 +349,7 @@ $(document).ready( () => {
       lineLayer.getContext('2d').closePath();
     }
   }
+
   function toggleButtons() {
     var button1 = document.getElementById("tileMove");
     var button2 = document.getElementById("tileAdd");
@@ -412,9 +368,7 @@ $(document).ready( () => {
         isTileMove = false;
     }
   }
-  
-  //追加
-  
+
   canvas.addEventListener('mousedown', handleMouseDown);
   canvas.addEventListener('mouseup', handleMouseUp);
   canvas.addEventListener('mousemove', handleMouseMove);
@@ -434,8 +388,6 @@ $(document).ready( () => {
         mouseY >= tile.tileY - 40 &&
         mouseY <= tile.tileY + 40
       ) {
-        //バグ
-        //tile.isMouseOver(mouseX, mouseY);
         selectedTile = true;
         selectedTileIndex = i;
         if(isTileMove){
@@ -459,8 +411,6 @@ $(document).ready( () => {
         $('#questView').html('<div id="questViewContent">' + '</div>');
       }
     }
-
-    //ここでタイルを取得出来る。
     redrawMap(mapData);
   }
   
@@ -468,10 +418,6 @@ $(document).ready( () => {
     const mouseX = event.offsetX;
     const mouseY = event.offsetY;
     if (selectedTile && isTileMove) {
-      //バグ
-      //selectedTile.stopDragging();
-      //mapTiles[moveTileIndex].tileX = event.offsetX;
-      //mapTiles[moveTileIndex].tileY = event.offsetY;
       mapData.tiles[selectedTileIndex].tileX = event.offsetX;
       mapData.tiles[selectedTileIndex].tileY = event.offsetY;
       
@@ -507,10 +453,8 @@ $(document).ready( () => {
           break;
         }
       }
-      //mapTiles = generateMap(mapData);
       redrawMap(mapData);
       console.log(mapData);
-      //console.log(mapTiles);
       moveTileIndex= -1;
       selectedTile = false;
       selectedTileIndex = -1;
@@ -519,8 +463,6 @@ $(document).ready( () => {
   
   function handleMouseMove(event) {
     if (selectedTile && isTileMove) {
-      //バグ
-      //selectedTile.drag(mouseX, mouseY);
       mapData.tiles[moveTileIndex].tileX = event.offsetX;
       mapData.tiles[moveTileIndex].tileY = event.offsetY;
       mapData.tiles[selectedTileIndex].tileX = event.offsetX;
@@ -539,41 +481,3 @@ $(document).ready( () => {
     }
   }
 });
-
-// 登録ボタンがクリックされた時の処理
-/* $('#submitBtn').click(function(event) {
-  event.preventDefault();
-
-  // 入力値を取得
-  let tileTitle = $('#tileTitle').val();
-  let tileContext = $('#tileContext').val();
-
-  // マップ上のクリック位置を取得
-  let mouseX = 0;
-  let mouseY = 0;
-  if (event.pageX || event.pageY) {
-    mouseX = event.pageX;
-    mouseY = event.pageY;
-  } else if (event.clientX || event.clientY) {
-    mouseX = event.clientX + document.body.scrollLeft + document.documentElement.scrollLeft;
-    mouseY = event.clientY + document.body.scrollTop + document.documentElement.scrollTop;
-  }
-
-  // 新しいタイルを作成
-  /* let newTile = new Tile(mouseX, mouseY, tileColor);
-  newTile.title = tileTitle;
-  newTile.context = tileContext; 
-
-  // mapData に新しいタイルを追加
-  mapData.tiles.push(newTile);
-
-  // 再描画
-  redrawMap();
-  
-  // フォームを閉じる
-  $('#formModal').modal('hide');
-}); */
-
-
-// 編集ボタンのコード
-
