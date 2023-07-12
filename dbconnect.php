@@ -145,6 +145,18 @@
         return $updateMap -> execute();
     }
 
+    function createTile($tileID,$mapID,$tileTitle,$tileContext,$tileX,$tileY){
+        $pdo = db_connect();
+        $createTile = $pdo -> prepare("INSERT INTO tile (tileID,mapID,tileTitle,tileContext,tileX,tileY) VALUE (:tileID,:mapID,:tileTitle,:tileContext,:tileX,:tileY)");
+        $createTile -> bindValue(":tileID",$tileID);
+        $createTile -> bindValue(":mapID",$mapID);
+        $createTile -> bindValue(":tileTitle",$tileTitle);
+        $createTile -> bindValue(":tileContext",$tileContext);
+        $createTile -> bindValue(":tileX",$tileX);
+        $createTile -> bindValue(":tileY",$tileY);
+        return $createTile -> execute();
+    }
+
     function getQuest($questIDs){ //mapDataの持つquestIDの配列を引数にそのまま参照。
         $pdo = db_connect();
         $quest = $pdo -> prepare("SELECT * FROM quest WHERE IN(". substr(str_repeat(',?',count($questIDs)) , 1).")");
@@ -152,10 +164,11 @@
         return $quest -> fetch(PDO::FETCH_ASSOC);
     }
 
-    function createQuest($questID,$questTitle,$questContext,$questTargetDate){
+    function createQuest($questID,$tileID,$questTitle,$questContext,$questTargetDate){
         $pdo = db_connect();
-        $createQuest = $pdo -> prepare("INSERT INTO quest (questID,questTitle,questContext,questTargetDate) value (:questID,:questTitle,:questContext,:questTargetDate)");
+        $createQuest = $pdo -> prepare("INSERT INTO quest (questID,tileID,questTitle,questContext,questTargetDate) value (:questID,:tileID,:questTitle,:questContext,:questTargetDate)");
         $createQuest -> bindParam(":questID",$questID);
+        $createQuest -> bindParam(":tileID",$tileID);
         $createQuest -> bindParam(":questTitle",$questTitle);
         $createQuest -> bindParam(":questContext",$questContext);
         $createQuest -> bindParam(":questTargetDate",$questTargetDate);
