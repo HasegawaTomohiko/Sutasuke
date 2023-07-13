@@ -39,7 +39,7 @@ CREATE TABLE tileConnection (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 CREATE TABLE quest(
-  questID varchar(20), 
+  questID varchar(20),
   tileID varchar(15),
   questTitle varchar(30) DEFAULT NULL,
   questContext varchar(100) DEFAULT NULL,

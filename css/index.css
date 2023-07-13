@@ -138,6 +138,9 @@ div#EditButton{
   z-index: 1;
 }
 
+/* 要修正 */
+
+
 img#editimg{
   height: 50px;
 }
@@ -162,7 +165,7 @@ div#content div#mapContent div#mapView div#mapContentView{
 }
 div#content div#mapContent div#mapQuestNav{
   width:100vw;
-  height:35vh;
+  height:25vh;
 }
 
 div#content div#mapContent div#mapQuestNav div#mapQuestAdd{

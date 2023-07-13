@@ -2,14 +2,13 @@
 
   require_once 'dbconnect.php';
 
+  $questID = $_POST['questID'];
   $tileID = $_POST['tileID'];
-  $mapID = $_POST['mapID'];
-  $tileTitle = htmlspecialchars($_POST['tileTitle'],ENT_QUOTES,'utf-8');
-  $tileContext = htmlspecialchars($_POST['tileContext'],ENT_QUOTES,'utf-8');
-  $tileX = $_POST['tileX'];
-  $tileY = $_POST['tileY'];
+  $questTitle = htmlspecialchars($_POST['questTitle'],ENT_QUOTES,'utf-8');
+  $questContext = htmlspecialchars($_POST['questContext'],ENT_QUOTES,'utf-8');
+  $questTargetDate = $_POST['questTargetDate'];
 
-  if(createTile($tileID,$mapID,$tileTitle,$tileContext,$tileX,$tileY)){
+  if(createQuest($questID,$tileID,$questTitle,$questContext,$questTargetDate)){
     $response = array();
     $response['success'] = true;
     echo json_encode($response);

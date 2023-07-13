@@ -65,6 +65,9 @@
                         <div id="mapLineEdit"></div>
                     </div>
                 </div>
+                <div id="save">
+                        <button id="saveButton">更新</button>
+                    </div>
                 <!-- マップ -->
                 <div id="mapContentView">
                     <canvas id="mapCanvas" width="1600" height="900"></canvas>
@@ -107,7 +110,7 @@
         <form class="form">
             <h2>クエスト追加</h2>
             <input type="text" id="questTitle" placeholder="クエスト名"/><br/>
-            <input type="text" id="qustContext" placeholder="クエストメモ"><br>
+            <input type="text" id="questContext" placeholder="クエストメモ"><br>
             <input type="date" id="questTargetDate" placeholder="クエスト目標達成日"><br>
             <button type="button" id="questAddButton">追加</button>
         </for>

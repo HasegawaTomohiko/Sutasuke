@@ -203,6 +203,26 @@ $(document).ready( () => {
     }
   });
 
+  $('#saveButton').click((event) => {
+    event.preventDefault();
+    $.ajax({
+      url: 'saveMapData.php',
+      type: 'POST',
+      data:{
+        mapData : mapData
+      },
+      dataType:'json',
+      success: (res) => {
+        redrawMap(mapData);
+      },
+      error: (xhr,status,err)=>{
+        console.log(xhr);
+        console.log(status);
+        console.log(err);
+      }
+    });
+  });
+
   $('#tileAddButton').on('click', (event) => {
     $('#formModalTile').modal('hide');
     event.preventDefault();
@@ -257,6 +277,51 @@ $(document).ready( () => {
       escapeClose: true,
       clickClose: true,
       showClose: false
+    });
+  });
+
+  $('#questAddButton').on('click', (event) => {
+    $('#formModalQuest').modal('hide');
+    event.preventDefault();
+    var questID = generateRandomString(15);
+    var tileID = mapData.tiles[selectedTileIndex].tileID;
+    var questTitle = $('#questTitle').val();
+    var questContext = $('#questContext').val();
+    var questTargetDate = $('#questTargetDate').val();
+    $('#questTitle').val('');
+    $('#questContext').val('');
+    $('#questTargetDate').val('');
+
+    console.log(questTargetDate);
+
+    $.ajax({
+      url: 'createQuest.php',
+      type: 'POST',
+      data: {
+        tileID: tileID,
+        questID: questID,
+        questTitle: questTitle,
+        questContext: questContext,
+        questTargetDate: questTargetDate
+      },
+      dataType: 'json',
+      success: (res) => {
+        var questData = {
+          questID: questID,
+          questTitle: questTitle,
+          questContext: questContext,
+          questTargetDate: questTargetDate,
+          questCompleted : false
+        };
+        mapData.tiles[selectedTileIndex].quests.push(questData);
+        console.log(mapData);
+        redrawMap(mapData);
+      },
+      error: (xhr,status,err)=>{
+        console.log(xhr);
+        console.log(status);
+        console.log(err);
+      }
     });
   });
 
@@ -400,9 +465,9 @@ $(document).ready( () => {
         $('#mapTileView').html('<div id="tileTitle">' + mapData.tiles[selectedTileIndex].tileTitle + '</div>');
         var questViewContent = '';
         for(let j = 0;j < mapData.tiles[selectedTileIndex].quests.length;j++){
-          questViewContent += '<div id="' + mapData.tiles[selectedTileIndex].quests[j].questID + '" class="questViewContent">' + mapTiles[selectedTileIndex].quests[j].questTitle + '</div>';
+          questViewContent += '<div id="' + mapData.tiles[selectedTileIndex].quests[j].questID + '" class="questViewContent">' + mapData.tiles[selectedTileIndex].quests[j].questTitle + '</div>';
         }
-        $('#questView').html(questViewContent);
+        $('#questView').append(questViewContent);
         break;
       } else {
         selectedTile = false;
