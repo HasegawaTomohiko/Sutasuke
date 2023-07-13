@@ -50,24 +50,13 @@
         <div id="mapContent">
             <div id="mapView">
             <!-- 編集ボタン -->
-            <div id="EditButton">
-                <button id="editTools"><img  id="editimg" src="img/site/btnedit.png"></button>
-                <button id="tileMove" style="display: none;"><img id="editimg" src="img/site/tilemove.png"></button>
-                <button id="tileAdd" style="display: none;"><img id="editimg" src="img/site/tileadd.png"></button>
-                <button id="tileEdit" style="display: none;"><img id="editimg" src="img/site/tilelink.png"></button>
-            </div>
-                <!-- マップ編集ツール -->
-                <div id="mapEdit">
-                    <div id="mapEditMode"></div>
-                    <div id="mapEditTools">
-                        <div id="mapTileAdd"></div>
-                        <div id="mapTileMove"></div>
-                        <div id="mapLineEdit"></div>
-                    </div>
+                <div id="EditButton">
+                    <button id="editTools"><img  id="editimg" src="img/site/btnedit.png"></button>
+                    <button id="tileMove" style="display: none;"><img id="editimg" src="img/site/tilemove.png"></button>
+                    <button id="tileAdd" style="display: none;"><img id="editimg" src="img/site/tileadd.png"></button>
+                    <button id="tileEdit" style="display: none;"><img id="editimg" src="img/site/tilelink.png"></button>
+                    <button id="saveButton">更新</button>
                 </div>
-                <div id="save">
-                        <button id="saveButton">更新</button>
-                    </div>
                 <!-- マップ -->
                 <div id="mapContentView">
                     <canvas id="mapCanvas" width="1600" height="900"></canvas>

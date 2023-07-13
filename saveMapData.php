@@ -7,9 +7,8 @@ function saveMapData($mapData) {
     $pdo = db_connect();
 
     // mapテーブルの更新
-    $stmt = $pdo->prepare('UPDATE map SET mapTitle = :mapTitle, mapContext = :mapContext WHERE mapID = :mapID');
+    $stmt = $pdo->prepare('UPDATE map SET mapTitle = :mapTitle WHERE mapID = :mapID');
     $stmt->bindValue(':mapTitle', $mapData['mapTitle'], PDO::PARAM_STR);
-    $stmt->bindValue(':mapContext', $mapData['mapContext'], PDO::PARAM_STR);
     $stmt->bindValue(':mapID', $mapData['mapID'], PDO::PARAM_STR);
     $stmt->execute();
 
@@ -25,19 +24,19 @@ function saveMapData($mapData) {
 
         // tileのクエストがすべて完了しているかチェック これが悪い。
         $allQuestsCompleted = true;
-        foreach ($tile['quests'] as $quests) {/* 
-            $stmts = $pdo->prepare('SELECT questCompleted FROM quest WHERE questID = :questID');
-            $stmts->bindValue(':questID', $quests['questID'], PDO::PARAM_STR);
-            $stmts->execute();
-            $questCompleted = $stmts->fetchAll(PDO::FETCH_ASSOC);
- */
-            $questCompleted = $quests['questCompleted'];
-            if (!$questCompleted) {
-                $allQuestsCompleted = false;
-                break;
+        if(!empty($tile['quests'])){
+            foreach ($tile['quests'] as $quests) {/* 
+                $stmts = $pdo->prepare('SELECT questCompleted FROM quest WHERE questID = :questID');
+                $stmts->bindValue(':questID', $quests['questID'], PDO::PARAM_STR);
+                $stmts->execute();
+                $questCompleted = $stmts->fetchAll(PDO::FETCH_ASSOC);*/
+                $questCompleted = $quests['questCompleted'];
+                if (!$questCompleted) {
+                    $allQuestsCompleted = false;
+                    break;
+                }
             }
         }
-
         // tileCompletedの更新(これをbindValueのみにさせてトランザクションを減らす)
         $tileCompleted = $allQuestsCompleted ? 1 : 0;
         $stmt->bindValue(':tileCompleted', $tileCompleted, PDO::PARAM_INT);
@@ -62,14 +61,14 @@ function saveMapData($mapData) {
 
         //tileConnectへの情報登録
         //一旦tileIDをキーに全削除
-        $stmt = $pdo->prepare('DELETE FROM tileConnect WHERE tileStart = :tileID OR tileTo = :tileID');
+        $stmt = $pdo->prepare('DELETE FROM tileConnection WHERE tileStart = :tileID');
         $stmt->bindValue(':tileID', $tile['tileID'], PDO::PARAM_STR);
         $stmt->execute();
 
         //nextTilesの存在がある場合にnextTilesに存在するlengthだけINSERTしていく。
         if (!empty($tile['nextTiles'])) {
             foreach ($tile['nextTiles'] as $nextTileID) {
-                $stmts = $pdo->prepare('INSERT INTO tileConnect (tileStart, tileTo) VALUES (:tileStart, :tileTo)');
+                $stmts = $pdo->prepare('INSERT INTO tileConnection (tileStart, tileTo) VALUES (:tileStart, :tileTo)');
                 $stmts->bindValue(':tileStart', $tile['tileID'], PDO::PARAM_STR);
                 $stmts->bindValue(':tileTo', $nextTileID, PDO::PARAM_STR);
                 $stmts->execute();
@@ -79,7 +78,7 @@ function saveMapData($mapData) {
 }
 
 // JSONデータを取得
-$mapData = json_decode($_POST['mapData'], true);
+$mapData = $_POST['mapData'];
 
 // JSONデータをサーバー上に保存
 saveMapData($mapData);
