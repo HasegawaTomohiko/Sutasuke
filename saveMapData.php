@@ -22,38 +22,12 @@ function saveMapData($mapData) {
         $stmt->bindValue(':tileY', $tile['tileY'], PDO::PARAM_INT);
         $stmt->bindValue(':tileID', $tile['tileID'], PDO::PARAM_STR);
 
-        // tileのクエストがすべて完了しているかチェック これが悪い。
-        $allQuestsCompleted = true;
-        if(!empty($tile['quests'])){
-            foreach ($tile['quests'] as $quests) {/* 
-                $stmts = $pdo->prepare('SELECT questCompleted FROM quest WHERE questID = :questID');
-                $stmts->bindValue(':questID', $quests['questID'], PDO::PARAM_STR);
-                $stmts->execute();
-                $questCompleted = $stmts->fetchAll(PDO::FETCH_ASSOC);*/
-                $questCompleted = $quests['questCompleted'];
-                if (!$questCompleted) {
-                    $allQuestsCompleted = false;
-                    break;
-                }
-            }
-        }
-        // tileCompletedの更新(これをbindValueのみにさせてトランザクションを減らす)
-        $tileCompleted = $allQuestsCompleted ? 1 : 0;
+        // tileのクエストがすべて完了しているかチェック
+        $tileCompleted = $tile['tileCompleted'] ? 1 : 0;
         $stmt->bindValue(':tileCompleted', $tileCompleted, PDO::PARAM_INT);
 
         // tileExecutableの更新
-        $tileExecutable = 1;
-        /*if (!empty($tile['backTiles'])) {
-            foreach ($tile['backTiles'] as $backTileID) {
-
-                
-                if (!$backTileCompleted) {
-                    $tileExecutable = 0;
-                    break;
-                }
-            }
-        } */
-
+        $tileExecutable = $tile['tileExecutable'] ? 1 : 0;
         $stmt->bindValue(':tileExecutable', $tileExecutable, PDO::PARAM_INT);
 
         //tileSave実行

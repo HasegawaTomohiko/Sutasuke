@@ -168,6 +168,11 @@ div#content div#mapContent div#mapQuestNav{
   height:25vh;
 }
 
+div#content div#mapContent div#mapQuestNav div#questView {
+  max-height: 20vh;
+  overflow-y: auto;
+}
+
 div#content div#mapContent div#mapQuestNav div#mapQuestAdd{
   position:absolute;
   bottom:10px;
@@ -215,4 +220,12 @@ div#formModal input[type="submit"]:hover {
 
 #tileMenu {
   display: none;
+}
+
+.unComp{
+  background-color: #eb7171;
+}
+
+.Comp{
+  background-color: #71deeb;
 }

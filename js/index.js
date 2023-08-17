@@ -76,6 +76,8 @@ $(document).ready( () => {
           },
           error : (xhr, status, err) => {
             console.log(err);
+            console.log(xhr);
+            console.log(status);
             console.log('cant Create json Data');
           }
         })
@@ -128,14 +130,12 @@ $(document).ready( () => {
       },
       dataType: 'json',
       success : (rep) => {
-        console.log('add Mapdata!');
         $.ajax({
           url: 'getMapTitle.php',
           type: 'POST',
           data: {userID : userID},
           dataType: 'json',
           success: (res) => {
-            console.log('success!!!!');
             var mapDataView = $('#mapTitleView');
       
             //mapTitleをクリックしたときの動作
@@ -160,7 +160,6 @@ $(document).ready( () => {
                 },
                 error : (xhr, status, err) => {
                   console.log(err);
-                  console.log('cant Create json Data');
                 }
               })
             });
@@ -232,7 +231,6 @@ $(document).ready( () => {
     var tileContext = $('#tileContext').val();
     $('#tileTitle').val('');
     $('#tileContext').val('');
-
     $.ajax({
       url: 'createTile.php',
       type: 'POST',
@@ -248,7 +246,6 @@ $(document).ready( () => {
       success: (res) => {
         var tileData = {
           tileID : tileID,
-          mapID : mapID,
           tileTitle: tileTitle,
           tileContext: tileContext,
           tileX: clickX,
@@ -256,7 +253,7 @@ $(document).ready( () => {
           nextTiles: [],
           backTiles: [],
           tileCompleted: false,
-          tileExecutable: true,
+          tileExecutable: false,
           quests: []
         };
         mapData.tiles.push(tileData);
@@ -283,6 +280,7 @@ $(document).ready( () => {
   $('#questAddButton').on('click', (event) => {
     $('#formModalQuest').modal('hide');
     event.preventDefault();
+    console.log(mapData);
     var questID = generateRandomString(15);
     var tileID = mapData.tiles[selectedTileIndex].tileID;
     var questTitle = $('#questTitle').val();
@@ -314,7 +312,23 @@ $(document).ready( () => {
           questCompleted : false
         };
         mapData.tiles[selectedTileIndex].quests.push(questData);
+        //ここにタイルの状態変化を作成する。////////////////////////////////////////////////////////////////////////////////
         console.log(mapData);
+        $('#mapTileView').html('<div id="mapTitle">' + mapData.tiles[selectedTileIndex].tileTitle + '</div>');
+        $('#questView').empty();
+        let questComponent = '';
+        for (let j = 0; j < mapData.tiles[selectedTileIndex].quests.length; j++) {
+          const quest = mapData.tiles[selectedTileIndex].quests[j];
+          const questHtml =
+            '<div id="' + quest.questID + '" class="questViewContent ' + (quest.questCompleted ? 'Comp' : 'unComp') + '">' +
+            '<input type="checkbox" id="' + quest.questID + '" class="questCheckbox" ' + (quest.questCompleted ? 'checked' : '') + '>' +
+            '<span class="questTitle">' + quest.questTitle + '</span>' +
+            '<p class="questContext">' + quest.questContext + '</p>' +
+            '<p class="questTargetDate">' + quest.questTargetDate + '</p>' +
+            '</div>';
+          $('#questView').append(questHtml);
+        }
+        updateTileStatus();
         redrawMap(mapData);
       },
       error: (xhr,status,err)=>{
@@ -348,6 +362,70 @@ $(document).ready( () => {
     console.log('isLineAdd : ' + isLineEdit);
   });
 
+  //クエストのチェックボックスの状態遷移
+  $('#questView').on('change', '.questCheckbox', function() {
+    const questID = $(this).attr('id');
+    const questIndex = mapData.tiles[selectedTileIndex].quests.findIndex(quest => quest.questID === questID);
+    mapData.tiles[selectedTileIndex].quests[questIndex].questCompleted = $(this).prop('checked');
+
+    console.log(mapData.tiles[selectedTileIndex].quests[questIndex].questCompleted);
+
+    $.ajax({
+      url:'updateQuest.php',
+      type:'POST',
+      data: {
+        questID:mapData.tiles[selectedTileIndex].quests[questIndex].questID,
+        questTitle:mapData.tiles[selectedTileIndex].quests[questIndex].questTitle,
+        questContext:mapData.tiles[selectedTileIndex].quests[questIndex].questContext,
+        questCompleted:(mapData.tiles[selectedTileIndex].quests[questIndex].questCompleted ? 1 : 0),
+        questTargetDate:mapData.tiles[selectedTileIndex].quests[questIndex].questTargetDate
+      },
+      dataType:'json',
+      success: (res) => {
+        console.log('updateQuest!!!!!!!!!!!!!');
+        $.ajax({
+          url: 'getMapDetail.php',
+          type: 'POST',
+          data: {mapID: mapData.mapID},
+          dataType: 'json',
+          success : (resp) => {
+            mapData = resp;
+            console.log(mapData);
+            redrawMap(mapData);
+          },
+          error : (xhr, status, err) => {
+            console.log(err);
+          }
+        })
+        $('#mapTileView').html('<div id="mapTitle">' + mapData.tiles[selectedTileIndex].tileTitle + '</div>');
+        $('#questView').empty();
+        for (let j = 0; j < mapData.tiles[selectedTileIndex].quests.length; j++) {
+          const quest = mapData.tiles[selectedTileIndex].quests[j];
+          const questHtml =
+            '<div id="' + quest.questID + '" class="questViewContent ' + (quest.questCompleted ? 'Comp' : 'unComp') + '">' +
+            '<input type="checkbox" id="' + quest.questID + '" class="questCheckbox" ' + (quest.questCompleted ? 'checked' : '') + '>' +
+            '<span class="questTitle">' + quest.questTitle + '</span>' +
+            '<p class="questContext">' + quest.questContext + '</p>' +
+            '<p class="questTargetDate">' + quest.questTargetDate + '</p>' +
+            '</div>';
+          $('#questView').append(questHtml);
+        }
+
+        updateTileStatus();
+
+        console.log('update Quest!!!');
+      },error : (xhr, status, err) => {
+        console.log(err);
+        console.log(xhr);
+        console.log(status);
+      }
+    });
+    
+    // タイルのステータスを更新
+    updateTileStatus();
+  });
+
+
   //Cookie取得
   function getCookie(name){
     var cookies = document.cookie.split(';');
@@ -359,7 +437,7 @@ $(document).ready( () => {
     }
     return '';
   }
-  
+
   //再描画
   function redrawMap(mapData) {
     tileLayer.getContext('2d').clearRect(0, 0, canvas.width, canvas.height);
@@ -434,10 +512,10 @@ $(document).ready( () => {
     }
   }
 
+
   canvas.addEventListener('mousedown', handleMouseDown);
   canvas.addEventListener('mouseup', handleMouseUp);
   canvas.addEventListener('mousemove', handleMouseMove);
-  
   
   let selectedTile = null;
   
@@ -462,18 +540,27 @@ $(document).ready( () => {
           startTileIndex = i;
           startTileID = tile.tileID;
         }
-        $('#mapTileView').html('<div id="tileTitle">' + mapData.tiles[selectedTileIndex].tileTitle + '</div>');
-        var questViewContent = '';
-        for(let j = 0;j < mapData.tiles[selectedTileIndex].quests.length;j++){
-          questViewContent += '<div id="' + mapData.tiles[selectedTileIndex].quests[j].questID + '" class="questViewContent">' + mapData.tiles[selectedTileIndex].quests[j].questTitle + '</div>';
+        console.log( mapData.tiles[selectedTileIndex]);
+        $('#mapTileView').html('<div id="mapTitle">' + mapData.tiles[selectedTileIndex].tileTitle + '</div>');
+        $('#questView').empty();
+        let questComponent = '';
+        for (let j = 0; j < mapData.tiles[selectedTileIndex].quests.length; j++) {
+          const quest = mapData.tiles[selectedTileIndex].quests[j];
+          const questHtml =
+            '<div id="' + quest.questID + '" class="questViewContent '  + (quest.questCompleted ? 'Comp' : 'unComp') + ' ">' +
+            '<input type="checkbox" id="' + quest.questID + '" class="questCheckbox" ' + (quest.questCompleted ? 'checked' : '') + '>' +
+            '<span class="questTitle">' + quest.questTitle + '</span>' +
+            '<p class="questContext">' + quest.questContext + '</p>' +
+            '<p class="questTargetDate">' + quest.questTargetDate + '</p>' +
+            '</div>';
+          $('#questView').append(questHtml);
         }
-        $('#questView').append(questViewContent);
         break;
       } else {
         selectedTile = false;
         selectedTileIndex = -1;
-        $('#mapTileView').html('<div id="mapTitle">' + "タイルが選択されていません" + '</div>');
-        $('#questView').html('<div id="questViewContent">' + '</div>');
+        $('#mapTileView').html('<div id="mapTitle">タイルが選択されていません。</div>');
+        $('#questView').empty();
       }
     }
     redrawMap(mapData);
@@ -545,4 +632,25 @@ $(document).ready( () => {
       canvas.getContext('2d').drawImage(tileLayer, 0, 0);
     }
   }
+
+  //状態遷移
+  function updateTileStatus() {
+    for (let i = 0; i < mapData.tiles.length; i++) {
+      const tile = mapData.tiles[i];
+      
+      // タイルのクエストがすべて完了しているかチェック
+      const allQuestsCompleted = tile.quests.every(quest => quest.questCompleted);
+      
+      // タイルのbackTilesの中の各backTileIDに対して処理を行う
+      const tileExecutable = tile.backTiles.length === 0 || tile.backTiles.every(backTileID => {
+        const backTile = mapData.tiles.find(t => t.tileID === backTileID);
+        return backTile.tileCompleted;
+      });
+      
+      // tileCompletedとtileExecutableを更新
+      tile.tileCompleted = allQuestsCompleted;
+      tile.tileExecutable = tileExecutable;
+    }
+  }
+  
 });

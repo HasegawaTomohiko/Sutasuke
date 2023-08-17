@@ -109,13 +109,10 @@
                         'questID' => $quest['questID'],
                         'questTitle' => $quest['questTitle'],
                         'questContext' => $quest['questContext'],
-                        'questCompleted' => false,
+                        'questCompleted' => $quest['questCompleted'] ? true : false,
                         'questTargetDate' => $quest['questTargetDate'],
                     );
 
-                    if($quest['questCompleted'] == 1){
-                        $tileData['quests']['questCompleted'] == true;
-                    }
                 }
             }
     
@@ -175,6 +172,22 @@
         return $createQuest -> execute();
     }
 
+    function updateQuest($questID, $questTitle, $questContext, $questCompleted, $questTargetDate) {
+        $pdo = db_connect();
+        $updateQuest = $pdo->prepare("UPDATE quest SET 
+                                        questTitle = :questTitle,
+                                        questContext = :questContext,
+                                        questCompleted = :questCompleted,
+                                        questTargetDate = :questTargetDate
+                                        WHERE questID = :questID");
+        $updateQuest->bindParam(":questTitle", $questTitle);
+        $updateQuest->bindParam(":questContext", $questContext);
+        $updateQuest->bindParam(":questCompleted", $questCompleted,PDO::PARAM_INT);
+        $updateQuest->bindParam(":questTargetDate", $questTargetDate);
+        $updateQuest->bindParam(":questID", $questID);
+        return $updateQuest->execute();
+    }
+
     function generateID($length){ // 62 ^ 15
         $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
         $randomString = '';
@@ -184,3 +197,4 @@
         return $randomString;
     }
 ?>
+
