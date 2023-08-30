@@ -142,6 +142,13 @@
         return $updateMap -> execute();
     }
 
+    function deleteMap($mapID){
+        $pdo = db_connect();
+        $deleteMap = $pdo -> prepare("DELETE FROM map WHERE mapID = :mapID");
+        $deleteMap -> bindParam(':mapID',$mapID);
+        return $deleteMap -> execute();
+    }
+
     function createTile($tileID,$mapID,$tileTitle,$tileContext,$tileX,$tileY){
         $pdo = db_connect();
         $createTile = $pdo -> prepare("INSERT INTO tile (tileID,mapID,tileTitle,tileContext,tileX,tileY) VALUE (:tileID,:mapID,:tileTitle,:tileContext,:tileX,:tileY)");
@@ -152,6 +159,13 @@
         $createTile -> bindValue(":tileX",$tileX);
         $createTile -> bindValue(":tileY",$tileY);
         return $createTile -> execute();
+    }
+
+    function deleteTile($tileID){
+        $pdo = db_connect();
+        $deleteTile = $pdo -> prepare("DELETE FROM tile WHERE tileID = :tileID");
+        $deleteTile -> bindParam(':tileID',$tileID);
+        return $deleteTile -> execute();
     }
 
     function getQuest($questIDs){ //mapDataの持つquestIDの配列を引数にそのまま参照。
@@ -186,6 +200,13 @@
         $updateQuest->bindParam(":questTargetDate", $questTargetDate);
         $updateQuest->bindParam(":questID", $questID);
         return $updateQuest->execute();
+    }
+
+    function deleteQuest($questID){
+        $pdo = db_connect();
+        $deleteQuest = $pdo -> prepare("DELETE FROM quest WHERE questID = :questID");
+        $deleteQuest -> bindParam(':questID',$questID);
+        return $deleteQuest -> execute();
     }
 
     function generateID($length){ // 62 ^ 15

@@ -229,3 +229,19 @@ div#formModal input[type="submit"]:hover {
 .Comp{
   background-color: #71deeb;
 }
+
+.map{
+  height:30px;
+}
+
+.mapTitle{
+  float:left;
+  font-size: 1.6rem;
+}
+
+.mapDelete{
+  display:none;
+  float:right;
+  cursor: pointer;
+  margin:10px;
+}

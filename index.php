@@ -120,7 +120,7 @@
             <!-- 使わない -->
             <button id="iconbtn" onclick="selectIcon()">Select Icon</button>
 
-        <div id="logout"><a href="#">logout</a></div>
+        <div id="logout"><a href="logout.php">logout</a></div>
     </div>
 
 

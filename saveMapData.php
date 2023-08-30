@@ -23,11 +23,11 @@ function saveMapData($mapData) {
         $stmt->bindValue(':tileID', $tile['tileID'], PDO::PARAM_STR);
 
         // tileのクエストがすべて完了しているかチェック
-        $tileCompleted = $tile['tileCompleted'] ? 1 : 0;
+        $tileCompleted = $tile['tileCompleted'] ? 0 : 1;
         $stmt->bindValue(':tileCompleted', $tileCompleted, PDO::PARAM_INT);
 
         // tileExecutableの更新
-        $tileExecutable = $tile['tileExecutable'] ? 1 : 0;
+        $tileExecutable = $tile['tileExecutable'] ? 0 : 1;
         $stmt->bindValue(':tileExecutable', $tileExecutable, PDO::PARAM_INT);
 
         //tileSave実行

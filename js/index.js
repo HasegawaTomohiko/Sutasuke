@@ -54,42 +54,20 @@ $(document).ready( () => {
       console.log('success!!!!');
       var mapDataView = $('#mapTitleView');
 
-      //mapTitleをクリックしたときの動作
-      mapDataView.on('click','.mapTitle', () => {
-        var mapID = $(event.target).attr('data-mapid');
-        console.log('click' + mapID);
-        $.ajax({
-          url: 'getMapDetail.php',
-          type: 'POST',
-          data: {mapID: mapID},
-          dataType: 'json',
-          success : (resp) => {
-            selectedTile = null;
-            selectedTileIndex = -1;
-            isSelectedMap = true;
-            moveTileIndex = -1;
-            mapData = resp;
-            console.log(mapData);
-            //mapTiles = generateMap(mapData);
-            //console.log(mapTiles);
-            redrawMap(mapData);
-          },
-          error : (xhr, status, err) => {
-            console.log(err);
-            console.log(xhr);
-            console.log(status);
-            console.log('cant Create json Data');
-          }
-        })
-      });
-
       //mapTitleViewにすべてのmapTitleを表示する
       var mapTitleHTML = '';
       for (var i = 0; i < res.length; i++){
         console.log(res[i].mapTitle);
         var mapTitle = res[i].mapTitle;
         var mapID = res[i].mapID;
-        mapTitleHTML += '<div class="mapTitle" data-mapid="' + mapID + '">' + mapTitle + '</div>';
+        mapTitleHTML += '<div class="map" data-mapid="' + mapID + '">' + 
+        '<div class="mapTitle">' + mapTitle + '</div>' + 
+        '<div class="mapDelete">' + 
+        '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-dash-square-fill" viewBox="0 0 16 16">' + 
+        '<path d="M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2zm2.5 7.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1 0-1z"/>' + 
+        '</svg>' + 
+        '</div>' + 
+        '</div>';
       }
       mapDataView.html(mapTitleHTML);
 
@@ -99,6 +77,38 @@ $(document).ready( () => {
       var mapDataView = $('#mapTitleView');
       mapDataView.append('<div class="mapNone">マップが存在しません</div>');
     }
+  });
+
+  
+  //mapTitleをクリックしたときの動作
+  $('#mapTitleView').on('click','.mapTitle', () => {
+    var mapID = $(event.target).closest('.map').data('mapid');
+    $('.mapDelete').hide();
+    $(event.target).closest('.map').find('.mapDelete').show();
+    console.log('click' + mapID);
+    $.ajax({
+      url: 'getMapDetail.php',
+      type: 'POST',
+      data: {mapID: mapID},
+      dataType: 'json',
+      success : (resp) => {
+        selectedTile = null;
+        selectedTileIndex = -1;
+        isSelectedMap = true;
+        moveTileIndex = -1;
+        mapData = resp;
+        console.log(mapData);
+        //mapTiles = generateMap(mapData);
+        //console.log(mapTiles);
+        redrawMap(mapData);
+      },
+      error : (xhr, status, err) => {
+        console.log(err);
+        console.log(xhr);
+        console.log(status);
+        console.log('cant Create json Data');
+      }
+    })
   });
 
   //新規作成クリック
@@ -120,72 +130,81 @@ $(document).ready( () => {
     var mapTitle = $('#mapTitle').val();
     $('#mapTitle').val('');
     console.log(mapTitle);
-    $.ajax({
-      url: 'createNewMap.php',
-      type: 'POST',
-      data: {
-        mapID: mapID,
-        userID: getCookie("userID"),
-        mapTitle: mapTitle
-      },
-      dataType: 'json',
-      success : (rep) => {
-        $.ajax({
-          url: 'getMapTitle.php',
-          type: 'POST',
-          data: {userID : userID},
-          dataType: 'json',
-          success: (res) => {
-            var mapDataView = $('#mapTitleView');
-      
-            //mapTitleをクリックしたときの動作
-            mapDataView.on('click','.mapTitle', () => {
-              var mapID = $(event.target).attr('data-mapid');
-              console.log('click' + mapID);
-              $.ajax({
-                url: 'getMapDetail.php',
-                type: 'POST',
-                data: {mapID: mapID},
-                dataType: 'json',
-                success : (resp) => {
-                  selectedTile = null;
-                  selectedTileIndex = -1;
-                  isSelectedMap = true;
-                  moveTileIndex = -1;
-                  mapData = resp;
-                  console.log(mapData);
-                  //mapTiles = generateMap(mapData);
-                  //console.log(mapTiles);
-                  redrawMap(mapData);
-                },
-                error : (xhr, status, err) => {
-                  console.log(err);
-                }
-              })
-            });
-      
-            //mapTitleViewにすべてのmapTitleを表示する
-            var mapTitleHTML = '';
-            for (var i = 0; i < res.length; i++){
-              console.log(res[i].mapTitle);
-              var mapTitle = res[i].mapTitle;
-              var mapID = res[i].mapID;
-              mapTitleHTML += '<div class="mapTitle" data-mapid="' + mapID + '">' + mapTitle + '</div>';
+    if(mapTitle != ""){
+      $.ajax({
+        url: 'createNewMap.php',
+        type: 'POST',
+        data: {
+          mapID: mapID,
+          userID: getCookie("userID"),
+          mapTitle: mapTitle
+        },
+        dataType: 'json',
+        success : (rep) => {
+          $.ajax({
+            url: 'getMapTitle.php',
+            type: 'POST',
+            data: {userID : userID},
+            dataType: 'json',
+            success: (res) => {
+              var mapDataView = $('#mapTitleView');
+        
+              //mapTitleをクリックしたときの動作
+              mapDataView.on('click','.mapTitle', () => {
+                var mapID = $(event.target).attr('data-mapid');
+                console.log('click' + mapID);
+                $.ajax({
+                  url: 'getMapDetail.php',
+                  type: 'POST',
+                  data: {mapID: mapID},
+                  dataType: 'json',
+                  success : (resp) => {
+                    selectedTile = null;
+                    selectedTileIndex = -1;
+                    isSelectedMap = true;
+                    moveTileIndex = -1;
+                    mapData = resp;
+                    console.log(mapData);
+                    //mapTiles = generateMap(mapData);
+                    //console.log(mapTiles);
+                    redrawMap(mapData);
+                  },
+                  error : (xhr, status, err) => {
+                    console.log(err);
+                  }
+                })
+              });
+        
+              //mapTitleViewにすべてのmapTitleを表示する
+              var mapTitleHTML = '';
+              for (var i = 0; i < res.length; i++){
+                console.log(res[i].mapTitle);
+                var mapTitle = res[i].mapTitle;
+                var mapID = res[i].mapID;
+                mapTitleHTML += '<div class="map" data-mapid="' + mapID +  '">' 
+                '<div class="mapTitle" data-mapid="' + mapID + '">' + mapTitle + '</div>' + 
+                '<div class="mapDelete">' + 
+                '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-dash-square-fill" viewBox="0 0 16 16">' + 
+                '<path d="M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2zm2.5 7.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1 0-1z"/>' + 
+                '</svg>' + 
+                '</div>' + 
+                '</div>';
+              }
+              mapDataView.html(mapTitleHTML);
+        
+            },
+            error: (xhr, status, err) => {
+              console.log('none!!!!');
+              var mapDataView = $('#mapTitleView');
+              mapDataView.append('<div class="mapNone">マップが存在しません</div>');
             }
-            mapDataView.html(mapTitleHTML);
-      
-          },
-          error: (xhr, status, err) => {
-            console.log('none!!!!');
-            var mapDataView = $('#mapTitleView');
-            mapDataView.append('<div class="mapNone">マップが存在しません</div>');
-          }
-        });
-      },
-      error : (xhr, status, err) => {
-        console.log(err);
-      }
-    });
+          });
+        },
+        error : (xhr, status, err) => {
+          console.log(err);
+        }
+      });
+    }
   });
 
   //mapナビクリック(バグ)
@@ -244,21 +263,24 @@ $(document).ready( () => {
       },
       dataType: 'json',
       success: (res) => {
-        var tileData = {
-          tileID : tileID,
-          tileTitle: tileTitle,
-          tileContext: tileContext,
-          tileX: clickX,
-          tileY: clickY,
-          nextTiles: [],
-          backTiles: [],
-          tileCompleted: false,
-          tileExecutable: false,
-          quests: []
-        };
-        mapData.tiles.push(tileData);
-        console.log(mapData);
-        redrawMap(mapData);
+        $.ajax({
+          url: 'getMapDetail.php',
+          type: 'POST',
+          data: {mapID: mapID},
+          dataType: 'json',
+          success : (resp) => {
+            selectedTile = null;
+            selectedTileIndex = -1;
+            isSelectedMap = true;
+            moveTileIndex = -1;
+            mapData = resp;
+            console.log(mapData);
+            redrawMap(mapData);
+          },
+          error : (xhr, status, err) => {
+            console.log(err);
+          }
+        })
       },
       error: (xhr,status,err)=>{
         console.log(xhr);
@@ -304,19 +326,34 @@ $(document).ready( () => {
       },
       dataType: 'json',
       success: (res) => {
-        var questData = {
-          questID: questID,
-          questTitle: questTitle,
-          questContext: questContext,
-          questTargetDate: questTargetDate,
-          questCompleted : false
-        };
-        mapData.tiles[selectedTileIndex].quests.push(questData);
+        $.ajax({
+          url: 'getMapDetail.php',
+          type: 'POST',
+          data: {mapID: mapID},
+          dataType: 'json',
+          success : (resp) => {
+            selectedTile = null;
+            selectedTileIndex = -1;
+            isSelectedMap = true;
+            moveTileIndex = -1;
+            mapData = resp;
+            console.log(mapData);
+            redrawMap(mapData);
+          },
+          error : (xhr, status, err) => {
+            console.log(err);
+          }
+        })
         //ここにタイルの状態変化を作成する。////////////////////////////////////////////////////////////////////////////////
         console.log(mapData);
-        $('#mapTileView').html('<div id="mapTitle">' + mapData.tiles[selectedTileIndex].tileTitle + '</div>');
+        $('#mapTileView').html('<div class="tile" id="' + mapData.tiles[selectedTileIndex].tileID +'"><div class="tileTitle" id="' + mapData.tiles[selectedTileIndex].tileID + '">' + mapData.tiles[selectedTileIndex].tileTitle + '</div>' + 
+                                '<div class="tileDelete">' + 
+                                '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-dash-square-fill" viewBox="0 0 16 16">' + 
+                                '<path d="M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2zm2.5 7.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1 0-1z"/>' + 
+                                '</svg>' + 
+                                '</div>' + 
+                                '</div>');
         $('#questView').empty();
-        let questComponent = '';
         for (let j = 0; j < mapData.tiles[selectedTileIndex].quests.length; j++) {
           const quest = mapData.tiles[selectedTileIndex].quests[j];
           const questHtml =
@@ -328,7 +365,29 @@ $(document).ready( () => {
             '</div>';
           $('#questView').append(questHtml);
         }
-        updateTileStatus();
+
+        //クエスト追加で強制的に状態変化
+        mapData.tiles[selectedTileIndex].tileExecutable = true;
+        mapData.tiles[selectedTileIndex].tileCompleted = false;
+        updateTileStatus(selectedTileIndex);
+        redrawMap(mapData);
+      },
+      error: (xhr,status,err)=>{
+        console.log(xhr);
+        console.log(status);
+        console.log(err);
+      }
+    });
+
+    //一度保存
+    $.ajax({
+      url: 'saveMapData.php',
+      type: 'POST',
+      data:{
+        mapData : mapData
+      },
+      dataType:'json',
+      success: (res) => {
         redrawMap(mapData);
       },
       error: (xhr,status,err)=>{
@@ -396,8 +455,7 @@ $(document).ready( () => {
           error : (xhr, status, err) => {
             console.log(err);
           }
-        })
-        $('#mapTileView').html('<div id="mapTitle">' + mapData.tiles[selectedTileIndex].tileTitle + '</div>');
+        });
         $('#questView').empty();
         for (let j = 0; j < mapData.tiles[selectedTileIndex].quests.length; j++) {
           const quest = mapData.tiles[selectedTileIndex].quests[j];
@@ -407,11 +465,16 @@ $(document).ready( () => {
             '<span class="questTitle">' + quest.questTitle + '</span>' +
             '<p class="questContext">' + quest.questContext + '</p>' +
             '<p class="questTargetDate">' + quest.questTargetDate + '</p>' +
+            '<div class="questDelete">' + 
+            '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-dash-square-fill" viewBox="0 0 16 16">' + 
+            '<path d="M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2zm2.5 7.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1 0-1z"/>' + 
+            '</svg>' + 
+            '</div>' + 
             '</div>';
           $('#questView').append(questHtml);
         }
 
-        updateTileStatus();
+        updateTileStatus(selectedTileIndex);
 
         console.log('update Quest!!!');
       },error : (xhr, status, err) => {
@@ -420,9 +483,179 @@ $(document).ready( () => {
         console.log(status);
       }
     });
-    
-    // タイルのステータスを更新
-    updateTileStatus();
+  });
+
+  //map削除処理
+  $('#mapTitleView').on('click','.mapDelete',() => {
+    const mapID = $(event.target).closest('.map').data('mapid');
+    console.log('map Delete!!! : ' + mapID);
+    $.ajax({
+      url:'deleteMap.php',
+      type:'POST',
+      data: {
+        mapID : mapID
+      },
+      dataType: 'json',
+      success: () => {
+        mapData = null;
+        $.ajax({
+          url: 'getMapTitle.php',
+          type: 'POST',
+          dataType: 'json',
+          success: (res) => {
+            console.log('success!!!!');
+            var mapDataView = $('#mapTitleView');
+      
+            //mapTitleViewにすべてのmapTitleを表示する
+            var mapTitleHTML = '';
+            for (var i = 0; i < res.length; i++){
+              console.log(res[i].mapTitle);
+              var mapTitle = res[i].mapTitle;
+              var mapID = res[i].mapID;
+              mapTitleHTML += '<div class="map" data-mapid="' + mapID + '">' + 
+              '<div class="mapTitle">' + mapTitle + '</div>' + 
+              '<div class="mapDelete">' + 
+              '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-dash-square-fill" viewBox="0 0 16 16">' + 
+              '<path d="M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2zm2.5 7.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1 0-1z"/>' + 
+              '</svg>' + 
+              '</div>' + 
+              '</div>';
+            }
+            mapDataView.html(mapTitleHTML);
+      
+          },
+          error: (xhr, status, err) => {
+            console.log('none!!!!');
+            var mapDataView = $('#mapTitleView');
+            mapDataView.append('<div class="mapNone">マップが存在しません</div>');
+          }
+        });
+      },error : (xhr, status, err) => {
+        console.log(err);
+        console.log(xhr);
+        console.log(status);
+      }
+    });
+  });
+
+  //tileDelete処理
+  $('#mapTileView').on('click','.tileDelete',() => {
+    const tileID = mapData.tiles[selectedTileIndex].tileID;
+    console.log('tile Delete!!! : ' + tileID);
+    $.ajax({
+      url:'deleteTile.php',
+      type:'POST',
+      data: {
+        tileID : tileID
+      },
+      dataType: 'json',
+      success: () => {
+        $.ajax({
+          url: 'getMapDetail.php',
+          type: 'POST',
+          data: {mapID: mapData.mapID},
+          dataType: 'json',
+          success : (resp) => {
+            mapData = resp;
+            console.log(mapData);
+            redrawMap(mapData);
+          },
+          error : (xhr, status, err) => {
+            console.log(err);
+          }
+        });
+        $('#mapTileView').html('<div class="tile" id="' + mapData.tiles[selectedTileIndex].tileID +'"><div class="tileTitle" id="' + mapData.tiles[selectedTileIndex].tileID + '">' + mapData.tiles[selectedTileIndex].tileTitle + '</div>' + 
+                                '<div class="tileDelete">' + 
+                                '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-dash-square-fill" viewBox="0 0 16 16">' + 
+                                '<path d="M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2zm2.5 7.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1 0-1z"/>' + 
+                                '</svg>' + 
+                                '</div>' + 
+                                '</div>');
+        $('#questView').empty();
+        for (let j = 0; j < mapData.tiles[selectedTileIndex].quests.length; j++) {
+          const quest = mapData.tiles[selectedTileIndex].quests[j];
+          const questHtml =
+            '<div id="' + quest.questID + '" class="questViewContent ' + (quest.questCompleted ? 'Comp' : 'unComp') + '">' +
+            '<input type="checkbox" id="' + quest.questID + '" class="questCheckbox" ' + (quest.questCompleted ? 'checked' : '') + '>' +
+            '<span class="questTitle">' + quest.questTitle + '</span>' +
+            '<p class="questContext">' + quest.questContext + '</p>' +
+            '<p class="questTargetDate">' + quest.questTargetDate + '</p>' +
+            '<div class="questDelete">' + 
+            '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-dash-square-fill" viewBox="0 0 16 16">' + 
+            '<path d="M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2zm2.5 7.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1 0-1z"/>' + 
+            '</svg>' + 
+            '</div>' + 
+            '</div>';
+          $('#questView').append(questHtml);
+        }
+
+        updateTileStatus(selectedTileIndex);
+      },error : (xhr, status, err) => {
+        console.log(err);
+        console.log(xhr);
+        console.log(status);
+      }
+    });
+  });
+
+  //questDelete処理
+  $('#questView').on('click','.questDelete',() => {
+    const questID = $(event.target).closest('.questViewContent').attr('id');
+    console.log('quest Delete!!! : ' + questID);
+    $.ajax({
+      url:'deleteQuest.php',
+      type:'POST',
+      data: {
+        questID : questID
+      },
+      dataType: 'json',
+      success: () => {
+        $.ajax({
+          url: 'getMapDetail.php',
+          type: 'POST',
+          data: {mapID: mapData.mapID},
+          dataType: 'json',
+          success : (resp) => {
+            mapData = resp;
+            console.log(mapData);
+            redrawMap(mapData);
+          },
+          error : (xhr, status, err) => {
+            console.log(err);
+          }
+        });
+        $('#mapTileView').html('<div class="tile" id="' + mapData.tiles[selectedTileIndex].tileID +'"><div class="tileTitle" id="' + mapData.tiles[selectedTileIndex].tileID + '">' + mapData.tiles[selectedTileIndex].tileTitle + '</div>' + 
+                                '<div class="tileDelete">' + 
+                                '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-dash-square-fill" viewBox="0 0 16 16">' + 
+                                '<path d="M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2zm2.5 7.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1 0-1z"/>' + 
+                                '</svg>' + 
+                                '</div>' + 
+                                '</div>');
+        $('#questView').empty();
+        for (let j = 0; j < mapData.tiles[selectedTileIndex].quests.length; j++) {
+          const quest = mapData.tiles[selectedTileIndex].quests[j];
+          const questHtml =
+            '<div id="' + quest.questID + '" class="questViewContent ' + (quest.questCompleted ? 'Comp' : 'unComp') + '">' +
+            '<input type="checkbox" id="' + quest.questID + '" class="questCheckbox" ' + (quest.questCompleted ? 'checked' : '') + '>' +
+            '<span class="questTitle">' + quest.questTitle + '</span>' +
+            '<p class="questContext">' + quest.questContext + '</p>' +
+            '<p class="questTargetDate">' + quest.questTargetDate + '</p>' +
+            '<div class="questDelete">' + 
+            '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-dash-square-fill" viewBox="0 0 16 16">' + 
+            '<path d="M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2zm2.5 7.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1 0-1z"/>' + 
+            '</svg>' + 
+            '</div>' + 
+            '</div>';
+          $('#questView').append(questHtml);
+        }
+
+        updateTileStatus(selectedTileIndex);
+      },error : (xhr, status, err) => {
+        console.log(err);
+        console.log(xhr);
+        console.log(status);
+      }
+    });
   });
 
 
@@ -461,8 +694,12 @@ $(document).ready( () => {
 
     if(tile.tileCompleted === true){
       tileLayer.getContext('2d').fillStyle = 'blue';
-    }else if(tile.tileExecutable === true || tile.backTiles.length === 0){
-      tileLayer.getContext('2d').fillStyle = 'red';
+    }else if(tile.tileExecutable === true){
+      if(tile.quests.length != 0){
+        tileLayer.getContext('2d').fillStyle = 'gray';
+      }else{
+        tileLayer.getContext('2d').fillStyle = 'red';
+      }
     }else{
       tileLayer.getContext('2d').fillStyle = 'gray';
     }
@@ -523,6 +760,8 @@ $(document).ready( () => {
     const mouseX = event.offsetX;
     const mouseY = event.offsetY;
   
+    if(mapData != null){
+      
     for (let i = 0; i < mapData.tiles.length; i++) {
       const tile = mapData.tiles[i];
       if (
@@ -541,7 +780,13 @@ $(document).ready( () => {
           startTileID = tile.tileID;
         }
         console.log( mapData.tiles[selectedTileIndex]);
-        $('#mapTileView').html('<div id="mapTitle">' + mapData.tiles[selectedTileIndex].tileTitle + '</div>');
+        $('#mapTileView').html('<div class="tile" id="' + mapData.tiles[selectedTileIndex].tileID +'"><div class="tileTitle" id="' + mapData.tiles[selectedTileIndex].tileID + '">' + mapData.tiles[selectedTileIndex].tileTitle + '</div>' + 
+                                '<div class="tileDelete">' + 
+                                '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-dash-square-fill" viewBox="0 0 16 16">' + 
+                                '<path d="M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2zm2.5 7.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1 0-1z"/>' + 
+                                '</svg>' + 
+                                '</div>' + 
+                                '</div>');
         $('#questView').empty();
         let questComponent = '';
         for (let j = 0; j < mapData.tiles[selectedTileIndex].quests.length; j++) {
@@ -552,6 +797,11 @@ $(document).ready( () => {
             '<span class="questTitle">' + quest.questTitle + '</span>' +
             '<p class="questContext">' + quest.questContext + '</p>' +
             '<p class="questTargetDate">' + quest.questTargetDate + '</p>' +
+            '<div class="questDelete">' + 
+            '<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-dash-square-fill" viewBox="0 0 16 16">' + 
+            '<path d="M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2zm2.5 7.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1 0-1z"/>' + 
+            '</svg>' + 
+            '</div>' + 
             '</div>';
           $('#questView').append(questHtml);
         }
@@ -559,9 +809,10 @@ $(document).ready( () => {
       } else {
         selectedTile = false;
         selectedTileIndex = -1;
-        $('#mapTileView').html('<div id="mapTitle">タイルが選択されていません。</div>');
+        $('#mapTileView').html('<div class="tile">タイルが選択されていません。</div>');
         $('#questView').empty();
       }
+    }
     }
     redrawMap(mapData);
   }
@@ -604,6 +855,8 @@ $(document).ready( () => {
           }
           break;
         }
+        
+        updateTileStatus(selectedTileIndex);
       }
       redrawMap(mapData);
       console.log(mapData);
@@ -633,24 +886,55 @@ $(document).ready( () => {
     }
   }
 
-  //状態遷移
-  function updateTileStatus() {
-    for (let i = 0; i < mapData.tiles.length; i++) {
-      const tile = mapData.tiles[i];
-      
-      // タイルのクエストがすべて完了しているかチェック
-      const allQuestsCompleted = tile.quests.every(quest => quest.questCompleted);
-      
-      // タイルのbackTilesの中の各backTileIDに対して処理を行う
-      const tileExecutable = tile.backTiles.length === 0 || tile.backTiles.every(backTileID => {
-        const backTile = mapData.tiles.find(t => t.tileID === backTileID);
-        return backTile.tileCompleted;
+  function updateTileStatus(tileIndex) {
+
+    console.log('update Status!');
+
+    const allQuestsCompleted = mapData.tiles[tileIndex].quests.every(quest => quest.questCompleted);
+
+    if(mapData.tiles[tileIndex].quests.length === 0){
+      mapData.tiles[tileIndex].tileExecutable = false;
+    }else if(mapData.tiles[tileIndex].backTiles.length === 0){
+      mapData.tiles[tileIndex].tileExecutable = true;
+    }
+
+    if(allQuestsCompleted){
+      mapData.tiles[tileIndex].tileCompleted = true;
+      mapData.tiles[tileIndex].nextTiles.forEach(nextTileID => {
+        const nextTileIndex = mapData.tiles.findIndex(t => t.tileID === nextTileID);
+
+        const allBackTilesCompleted = mapData.tiles[nextTileIndex].backTiles.every(backTileID => {
+          const backTile =mapData.tiles.find(t => t.tileID === backTileID);
+          return backTile.tileCompleted;
+        });
+
+        mapData.tiles[nextTileIndex].tileExecutable = allBackTilesCompleted;
       });
-      
-      // tileCompletedとtileExecutableを更新
-      tile.tileCompleted = allQuestsCompleted;
-      tile.tileExecutable = tileExecutable;
+    }else{
+      mapData.tiles[tileIndex].tileCompleted = false;
     }
   }
-  
+
+  function updateTileCompleted(tileIndex){
+    const allQuestsCompleted = mapData.tiles[tileIndex].quests.every(quest => quest.questCompleted);
+
+    if(allQuestsCompleted){
+      mapData.tiles[tileIndex].tileCompleted = true;
+    }else{
+      mapData.tiles[tileIndex].tileCompleted = false;
+    }
+  }
 });
+
+
+/* 
+タイル判断ポイント
+
+・tileAdd
+・questAdd
+・questUpdate
+・LineAdd
+・questDelete
+
+
+*/
